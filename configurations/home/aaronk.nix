@@ -10,10 +10,10 @@
 in {
   imports = [
     self.homeModules.default
-    self.homeModules.nix
+    self.homeModules.home-only
   ];
 
-  home.username = "anarcho";
-  home.homeDirectory = "/home/anarcho";
+  home.username = "aaronk";
+  home.homeDirectory = "/home/aaronk";
   home.stateVersion = "24.11";
 }
