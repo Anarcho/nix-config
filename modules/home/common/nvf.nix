@@ -51,10 +51,17 @@
             format.enable = true;
             format.package = pkgs.alejandra;
           };
+          # Nix
+          python = {
+            enable = true;
+            treesitter.enable = true;
+            lsp.enable = true;
+            lsp.server = "basedpyright";
+            format.enable = true;
+          };
 
           rust.enable = true;
           zig.enable = true;
-          python.enable = true;
           clang.enable = true;
         };
 
@@ -66,7 +73,16 @@
         # Copilot
         assistant.copilot = {
           enable = true;
-          cmp.enable = true;
+        };
+
+        snippets = {
+          luasnip = {
+            enable = true;
+            loaders = "require('luasnip.loaders.from_vscode').lazy_load()";
+            providers = [
+              "friendly-snippets"
+            ];
+          };
         };
 
         dashboard = {
@@ -75,6 +91,17 @@
             setupOpts = {
               theme = "doom";
               config = {
+                header = [
+                  ""
+                  ""
+                  "███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗"
+                  "████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║"
+                  "██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║"
+                  "██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║"
+                  "██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║"
+                  "╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝"
+                  ""
+                ];
                 center = [
                   {
                     icon = " ";
@@ -86,9 +113,25 @@
                     key_format = " %s";
                     action = "FzfLua files";
                   }
+                  {
+                    icon = " ";
+                    icon_hl = "Title";
+                    desc = "Quit";
+                    desc_hl = "String";
+                    key = "q";
+                    key_hl = "Number";
+                    key_format = " %s";
+                    action = "qa!";
+                  }
                 ];
               };
             };
+          };
+        };
+
+        ui = {
+          noice = {
+            enable = true;
           };
         };
 
@@ -100,6 +143,38 @@
             package = fzf-lua;
             setup = "require('fzf-lua').setup{}";
             after = ["nvim-web-devicons"];
+          };
+
+          # Blink
+          blink-cmp = {
+            package = blink-cmp;
+            setup = "require('blink.cmp').setup{
+                keymap = { preset = 'default'},
+
+                appearance = {
+                  use_nvim_cmp_as_default = true,
+                };
+
+                completion = {
+                  accept = {
+                    auto_brackets = {
+                      enabled = true,
+                    },
+                  },
+
+                  menu = {
+                    draw = {
+                      treesitter = {'lsp'},
+                    },
+                  },
+                  documentation = {
+                    auto_show = true,
+                    auto_show_delay_ms = 200,
+                  },
+                },
+            }
+            ";
+            after = ["friendly-snippets"];
           };
         };
       };

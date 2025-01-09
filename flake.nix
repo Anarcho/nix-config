@@ -1,5 +1,5 @@
 {
-  description = "A home-manager template providing useful tools & settings for Nix-based development";
+  description = "Anarcho's Flake Config";
 
   inputs = {
     # Principle inputs (updated by `nix run .#update`)
@@ -22,6 +22,11 @@
     # Software inputs
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    # TMUX Sessionizer
+    tmux-sessionizer.url = "github:jrmoulton/tmux-sessionizer";
+    tmux-sessionizer.inputs.nixpkgs.follows = "nixpkgs";
+    tmux-sessionizer.inputs.flake-parts.follows = "flake-parts";
 
     # NVF
     nvf.url = "github:notashelf/nvf";

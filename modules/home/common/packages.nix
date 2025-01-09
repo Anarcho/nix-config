@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Nix packages to install to $HOME
   #
   # Search for packages here: https://search.nixos.org/packages
@@ -17,6 +16,7 @@
     nix-info
     nixpkgs-fmt
 
+    just
 
     # On ubuntu, we need this less for `man home-configuration.nix`'s pager to
     # work.
@@ -36,7 +36,7 @@
     # Tmate terminal sharing.
     tmate = {
       enable = true;
-      #host = ""; #In case you wish to use a server other than tmate.io 
+      #host = ""; #In case you wish to use a server other than tmate.io
     };
   };
 }

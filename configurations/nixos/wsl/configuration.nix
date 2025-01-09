@@ -6,6 +6,8 @@
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
+  networking.hostName = "nixos";
+
   wsl = {
     enable = true;
     defaultUser = "aaronk";
