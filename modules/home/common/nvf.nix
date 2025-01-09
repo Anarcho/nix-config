@@ -23,6 +23,7 @@
         searchCase = "smart";
         preventJunkFiles = true;
         lineNumberMode = "relNumber";
+        useSystemClipboard = true;
 
         # Theme
         theme = {
@@ -65,10 +66,20 @@
           clang.enable = true;
         };
 
+        treesitter = {
+          enable = true;
+        };
+
         statusline.lualine.enable = true;
         telescope.enable = true;
         autocomplete.nvim-cmp.enable = true;
         autopairs.nvim-autopairs.enable = true;
+        binds.whichKey = {
+          enable = true;
+          setupOpts = {
+            preset = "helix";
+          };
+        };
 
         # Copilot
         assistant.copilot = {
@@ -116,6 +127,16 @@
                   {
                     icon = " ";
                     icon_hl = "Title";
+                    desc = "Recent Files";
+                    desc_hl = "String";
+                    key = "r";
+                    key_hl = "Number";
+                    key_format = " %s";
+                    action = "FzfLua oldfiles";
+                  }
+                  {
+                    icon = " ";
+                    icon_hl = "Title";
                     desc = "Quit";
                     desc_hl = "String";
                     key = "q";
@@ -132,6 +153,17 @@
         ui = {
           noice = {
             enable = true;
+          };
+        };
+
+        tabline = {
+          nvimBufferline = {
+            enable = true;
+            mappings = {
+              cycleNext = "<S-l>";
+              cyclePrevious = "<S-h>";
+              closeCurrent = "<leader>bd";
+            };
           };
         };
 
@@ -177,6 +209,58 @@
             after = ["friendly-snippets"];
           };
         };
+
+        keymaps = [
+          {
+            key = "<leader><leader>";
+            desc = "Find files";
+            mode = "n";
+            silent = true;
+            action = ":FzfLua files<CR>";
+          }
+          {
+            key = "<leader>/";
+            desc = "Grep (Root Dir)";
+            mode = "n";
+            silent = true;
+            action = ":FzfLua live_grep_native<CR>";
+          }
+          {
+            key = "<leader>fb";
+            desc = "Grep buffer";
+            mode = "n";
+            silent = true;
+            action = ":FzfLua grep_curbuf<CR>";
+          }
+          {
+            key = "<leader>gd";
+            desc = "LSP Definitions";
+            mode = "n";
+            silent = true;
+            action = ":FzfLua lsp_definitions jump_to_single_result=true ignore_current_line=true<CR>";
+          }
+          {
+            key = "<leader>gr";
+            desc = "LSP References";
+            mode = "n";
+            silent = true;
+            action = ":FzfLua lsp_references jump_to_single_result=true ignore_current_line=true<CR>";
+          }
+          {
+            key = "<leader>gI";
+            desc = "LSP Implementations";
+            mode = "n";
+            silent = true;
+            action = ":FzfLua lsp_implementations jump_to_single_result=true ignore_current_line=true<CR>";
+          }
+          {
+            key = "<leader>gy";
+            desc = "LSP Type Defs";
+            mode = "n";
+            silent = true;
+            action = ":FzfLua lsp_typedefs jump_to_single_result=true ignore_current_line=true<CR>";
+          }
+        ];
       };
     };
   };

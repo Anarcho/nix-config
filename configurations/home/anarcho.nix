@@ -10,8 +10,11 @@
 in {
   imports = [
     self.homeModules.default
-    self.homeModules.nix
   ];
+
+  desktop.homemodules.wm = {
+    defaultTerminal = "ghostty";
+  };
 
   home.username = "anarcho";
   home.homeDirectory = "/home/anarcho";

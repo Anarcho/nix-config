@@ -10,21 +10,21 @@
 
   wsl = {
     enable = true;
+    wslConf.automount.root = "/mnt";
+    wslConf.interop.appendWindowsPath = false;
+    wslConf.network.generateHosts = false;
     defaultUser = "aaronk";
-    nativeSystemd = true;
+    startMenuLaunchers = true;
   };
 
-  services.dbus = {
-    enable = true;
-    implementation = "broker";
-  };
+  environment.enableAllTerminfo = true;
 
-  systemd.user.services.dbus = {
-    wantedBy = ["default.target"];
-  };
-
-  environment.sessionVariables = {
-    DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/users/1000/bus";
+  nix = {
+    settings = {
+      trusted-users = ["aaronk"];
+      accept-flake-config = true;
+      auto-optimise-store = true;
+    };
   };
 
   nix.settings.experimental-features = ["nix-command" "flakes"];

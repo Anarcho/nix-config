@@ -20,7 +20,6 @@ in {
       tmuxPlugins.cpu
       {
         plugin = tmuxPlugins.resurrect;
-
         extraConfig = "set -g @resurrect-strategy-nvim 'session'";
       }
 
