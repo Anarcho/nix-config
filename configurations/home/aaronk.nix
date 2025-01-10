@@ -9,7 +9,7 @@
   inherit (inputs) self;
 in {
   imports = [
-    self.homeModules.default
+    self.homeModules.common
     self.homeModules.home-only
   ];
 

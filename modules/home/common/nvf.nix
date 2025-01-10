@@ -24,6 +24,8 @@
         preventJunkFiles = true;
         lineNumberMode = "relNumber";
         useSystemClipboard = true;
+        spellcheck.enable = true;
+        undoFile.enable = true;
 
         # Theme
         theme = {
@@ -159,6 +161,7 @@
         tabline = {
           nvimBufferline = {
             enable = true;
+            setupOpts.options.numbers = "none";
             mappings = {
               cycleNext = "<S-l>";
               cyclePrevious = "<S-h>";
@@ -209,6 +212,24 @@
             after = ["friendly-snippets"];
           };
         };
+
+        luaConfigPost = ''
+            vim.opt.tabstop = 2
+            vim.opt.shiftwidth = 2
+            vim.opt.expandtab = true
+
+            -- Highlight on Yank
+            local augroup = vim.api.nvim_create_augroup
+            local autocmd = vim.api.nvim_create_autocmd
+
+            augroup('YankHighlight', { clear = true })
+            autocmd('TextYankPost', {
+              group = 'YankHighlight',
+              callback = function()
+                vim.highlight.on_yank({ higroup = 'IncSearch', timeout = '100' })
+              end
+          })
+        '';
 
         keymaps = [
           {
