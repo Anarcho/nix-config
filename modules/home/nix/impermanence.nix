@@ -8,13 +8,10 @@
       allowOther = true;
       directories = [
         "Repos"
-        "Documents"
         "test"
         ".config/nvim"
-        ".config/obsidian"
         ".config/sops"
         ".config/sops-nix"
-        ".config/assets"
         ".ssh"
         "test"
       ];

@@ -40,7 +40,7 @@
           formatOnSave = true;
           lspkind.enable = true;
           lspSignature.enable = true;
-          lsplines.enable = true;
+          lsplines.enable = false;
           lspconfig.enable = true;
         };
 

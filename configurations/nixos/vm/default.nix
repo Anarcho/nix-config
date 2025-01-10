@@ -14,8 +14,12 @@ in {
     self.nixosModules.impermanence
     self.nixosModules.disko
     self.nixosModules.desktop
+    self.nixosModules.programs
     ./configuration.nix
   ];
+
+  nixpkgs.config.allowUnfree = true;
+
   users.defaultUserShell = pkgs.zsh;
 
   programs.zsh.enable = true;
@@ -25,6 +29,8 @@ in {
     isVirtualMachine = true;
     videoDrivers = ["virtualbox"];
   };
+
+  programs.modules.notes.obsidian.enable = true;
 
   # Enable home-manager for "anarcho" user
   home-manager.users."anarcho" = {
