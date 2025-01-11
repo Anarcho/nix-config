@@ -1,4 +1,5 @@
 {
+  flake,
   config,
   lib,
   pkgs,
@@ -6,6 +7,8 @@
   ...
 }:
 with lib; let
+  inherit (flake) inputs;
+  inherit (inputs) self;
   cfg = config.desktop.homemodules.wm;
 
   workspaces = {
@@ -14,6 +17,11 @@ with lib; let
     ws3 = "3:notes";
   };
 in {
+  imports = [
+    inputs.nix-colors.homeManagerModules.default
+    ./wm
+  ];
+
   options.desktop.homemodules.wm = {
     defaultTerminal = mkOption {
       type = types.addCheck types.str (
@@ -27,6 +35,7 @@ in {
       default = "ghostty";
       description = "Default terminal to use with window manager";
     };
+
     defaultBrowser = mkOption {
       type = types.addCheck types.str (
         browser: let
@@ -39,126 +48,175 @@ in {
       default = "firefox";
       description = "Default browser to use with window manager";
     };
-    defaultNotesApplication = mkOption {
-      type = types.addCheck types.str (
-        notes: let
-          hasPkg = builtins.hasAttr notes pkgs;
-        in
-          if hasPkg
-          then true
-          else throw "Notes Applications '${notes}' is not a valid nix package."
-      );
-      default = "obsidian";
-      description = "Default notes application to use with window manager";
-    };
 
     wallpaperImage = mkOption {
       type = types.str;
       description = "Wallpaper name file";
     };
-  };
 
-  config = mkIf (osConfig.services.xserver.windowManager.i3.enable or false) {
-    # Check terminal is installed
-    assertions = [
-      {
-        assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
-        message = "Terminal '${cfg.defaultTerminal}' not found in installed packages.";
-      }
-      {
-        assertion = any (p: p.pname or p.name == cfg.defaultBrowser) config.home.packages;
-        message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
-      }
-    ];
-
-    xsession.windowManager.i3 = {
-      enable = true;
-      config = {
-        modifier = "Mod4";
-
-        keybindings = let
-          modifier = "Mod4";
-          terminal = cfg.defaultTerminal;
-          browser = cfg.defaultBrowser;
-          notes = cfg.defaultNotesApplication;
-        in
-          mkOptionDefault {
-            "${modifier}+Return" = "exec ${pkgs.${terminal}}/bin/${terminal}";
-            "${modifier}+f" = "exec ${pkgs.${browser}}/bin/${browser}";
-            "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show drun";
-            "${modifier}+q" = "kill";
-
-            # Switch to workspaces
-            "${modifier}+1" = "workspace ${workspaces.ws1}";
-            "${modifier}+2" = "workspace ${workspaces.ws2}";
-            "${modifier}+3" = "workspace ${workspaces.ws3}";
-
-            # Modes
-            "${modifier}+n" = "mode obsidian";
-
-            #Workspace
-            # Firefox - mod-f
-
-            # Windows
-            # - Close Window
-            # - Move between windows - hjkl
-            # - Move between windows - Alternative left, up, down, right
-
-            # Open Windows:
-            # - Vertical
-            # - Horizontal
-
-            # Floating/Tiled
-
-            # Workspaces
-            # - Open Workspaces
-            # - Go to workspaces
-            # - move window to workspaces
-            # - Cycle workspaces - "ALT TAB"
-
-            # Other Addtions:
-            # - Lock screen, application search, bar, appearance (gaps)
-
-            # Startup actions
-
-            "${modifier}+l" = "exec ${pkgs.i3lock}/bin/i3lock";
-          };
-
-        modes = {
-          obsidian = {
-            "p" = ''exec "xdg-open 'obsidian://open?vault=personal'"; mode "default"'';
-            "Escape" = "mode default";
-            "Return" = "mode default";
-          };
-        };
-
-        assigns = {
-          "${workspaces.ws1}" = [{class = "^${cfg.defaultTerminal}";}];
-          "${workspaces.ws2}" = [{class = "^${cfg.defaultBrowser}";}];
-          "${workspaces.ws3}" = [{class = "^${cfg.defaultNotesApplication}";}];
-        };
-
-        bars = [
-          {
-            position = "bottom";
-            statusCommand = "${pkgs.i3status}/bin/i3status";
-          }
-        ];
-
-        startup = [
-          {
-            command = "feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}";
-            always = true;
-          }
-        ];
-      };
+    enablePolybar = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable polybar";
     };
 
-    home.packages = with pkgs; [
-      i3status
-      rofi
-      feh
-      i3lock
-    ];
+    colorScheme = mkOption {
+      type = types.str;
+      description = "Color scheme used for window manager";
+      default = "gruvbox-dark-medium";
+    };
   };
+
+  config = mkMerge [
+    (mkIf (osConfig.services.xserver.windowManager.i3.enable or false) {
+      assertions = [
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
+          message = "Terminal '${cfg.defaultTerminal}' not found in installed packages.";
+        }
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultBrowser) config.home.packages;
+          message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
+        }
+      ];
+
+      xsession.windowManager.i3 = {
+        enable = true;
+        config = {
+          modifier = "Mod4";
+
+          keybindings = let
+            modifier = "Mod4";
+            terminal = cfg.defaultTerminal;
+            browser = cfg.defaultBrowser;
+          in
+            mkOptionDefault {
+              "${modifier}+Return" = "exec ${pkgs.${terminal}}/bin/${terminal}";
+              "${modifier}+f" = "exec ${pkgs.${browser}}/bin/${browser}";
+              "${modifier}+d" = "exec ${pkgs.rofi}/bin/rofi -show drun";
+              "${modifier}+q" = "kill";
+
+              "${modifier}+1" = "workspace ${workspaces.ws1}";
+              "${modifier}+2" = "workspace ${workspaces.ws2}";
+              "${modifier}+3" = "workspace ${workspaces.ws3}";
+
+              "${modifier}+l" = "exec ${pkgs.i3lock}/bin/i3lock";
+            };
+
+          assigns = {
+            "${workspaces.ws1}" = [{class = "^${cfg.defaultTerminal}";}];
+
+            "${workspaces.ws2}" = [{class = "^${cfg.defaultBrowser}";}];
+          };
+
+          startup = [
+            {
+              command = "feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}";
+              always = true;
+            }
+            {
+              command = "systemctl --user restart polybar";
+              always = true;
+              notification = false;
+            }
+          ];
+        };
+      };
+
+      desktop.homemodules.wm.modules.polybar = mkIf cfg.enablePolybar {
+        enable = true;
+        colorScheme = inputs.nix-colors.colorSchemes.${cfg.colorScheme};
+      };
+
+      home.packages = with pkgs; [
+        rofi
+        feh
+        i3lock
+      ];
+    })
+
+    (mkIf (osConfig.services.xserver.windowManager.bspwm.enable or false) {
+      assertions = [
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
+          message = "Terminal '${cfg.defaultTerminal}' not found in installed packages.";
+        }
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultBrowser) config.home.packages;
+          message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
+        }
+      ];
+
+      xsession.windowManager.bspwm = {
+        enable = true;
+        extraConfig = ''
+          bspc monitor -d ${workspaces.ws1} ${workspaces.ws2} ${workspaces.ws3}
+
+          # Window settings
+          bspc config border_width         2
+          bspc config window_gap          12
+          bspc config split_ratio         0.52
+
+          # Mouse behavior
+
+          bspc config focus_follows_pointer true
+
+          # Colors (using colorScheme later)
+          bspc config normal_border_color "#444444"
+          bspc config active_border_color "#666666"
+          bspc config focused_border_color "#888888"
+
+        '';
+      };
+
+      services.sxhkd = {
+        enable = true;
+        keybindings = {
+          "super + Return" = "${pkgs.${cfg.defaultTerminal}}/bin/${cfg.defaultTerminal}";
+          "super + f" = "${pkgs.${cfg.defaultBrowser}}/bin/${cfg.defaultBrowser}";
+          "super + d" = "${pkgs.rofi}/bin/rofi -show drun";
+          "super + alt + {q,r}" = "bspc {quit,wm -r}";
+
+          "super + q" = "bspc node -c";
+          "super + {1-3}" = "bspc desktop -f '{${workspaces.ws1},${workspaces.ws2},${workspaces.ws3}}'";
+          "super + shift + {1-3}" = "bspc node -d '{${workspaces.ws1},${workspaces.ws2},${workspaces.ws3}}'";
+          "super + {h,j,k,l}" = "bspc node -f {west,south,north,east}";
+          "super + ctrl + {h,j,k,l}" = "bspc node -p {west,south,north,east}";
+          "super + space" = "bspc node -t '~floating'";
+          "super + l" = "${pkgs.i3lock}/bin/i3lock";
+        };
+      };
+
+      systemd.user.services = {
+        wallpaper = {
+          Unit = {
+            Description = "Set wallpaper";
+            After = ["graphical-session-pre.target"];
+            PartOf = ["graphical-session.target"];
+          };
+          Install = {
+            WantedBy = ["graphical-session.target"];
+          };
+          Service = {
+            ExecStart = "${pkgs.feh}/bin/feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}";
+            Type = "oneshot";
+          };
+        };
+      };
+
+      desktop.homemodules.wm.modules.polybar = mkIf cfg.enablePolybar {
+        enable = true;
+        colorScheme = inputs.nix-colors.colorSchemes.${cfg.colorScheme};
+      };
+
+      home.packages = with pkgs; [
+        rofi
+        feh
+        i3lock
+        sxhkd
+        xdo
+        wmname
+      ];
+    })
+  ];
 }

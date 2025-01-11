@@ -11,13 +11,15 @@ in {
   imports = [
     self.homeModules.common
     self.homeModules.nix
+    inputs.nix-colors.homeManagerModules.default
   ];
 
   desktop.homemodules.wm = {
     defaultTerminal = "ghostty";
-    wallpaperImage = "fantasy-woods.jpg";
+    wallpaperImage = "gruv-forest.png";
     defaultBrowser = "firefox";
-    defaultNotesApplication = "obsidian";
+    enablePolybar = true;
+    colorScheme = "gruvbox-dark-hard";
   };
 
   desktop.homemodules.notes = {

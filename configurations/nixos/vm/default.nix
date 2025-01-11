@@ -24,7 +24,7 @@ in {
 
   programs.zsh.enable = true;
 
-  desktop.modules.wm.i3 = {
+  desktop.modules.wm.bspwm = {
     enable = true;
     isVirtualMachine = true;
     videoDrivers = ["virtualbox"];
