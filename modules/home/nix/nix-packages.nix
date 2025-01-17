@@ -13,8 +13,5 @@
     tmate = {
       enable = true;
     };
-
-    # Terminals
-    ghostty.enable = true;
   };
 }

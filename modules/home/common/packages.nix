@@ -14,7 +14,10 @@
     nil # Nix language server
     nix-info
     nixpkgs-fmt
+    yamlfmt
     just
+
+    playerctl
   ];
 
   # Programs natively supported by home-manager.

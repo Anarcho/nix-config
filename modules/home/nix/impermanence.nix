@@ -12,6 +12,7 @@
         ".config/nvim"
         ".config/sops"
         ".config/sops-nix"
+        ".config/zsh"
         ".ssh"
         "test"
       ];
@@ -19,7 +20,6 @@
       files = [
         ".bash_history"
         ".bash_logout"
-        ".zsh_history"
       ];
     };
   };

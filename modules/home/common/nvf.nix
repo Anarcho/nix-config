@@ -26,6 +26,7 @@
         useSystemClipboard = true;
         spellcheck.enable = true;
         undoFile.enable = true;
+        globals.defaultEditor = true;
 
         # Theme
         theme = {
@@ -156,6 +157,13 @@
           noice = {
             enable = true;
           };
+          colorizer = {
+            setupOpts.user_default_options = {
+              AARRGGBB = true;
+              RGB = true;
+              RRGGBB = true;
+            };
+          };
         };
 
         tabline = {
@@ -180,26 +188,48 @@
             after = ["nvim-web-devicons"];
           };
 
-          # Blink
+          img-clip = {
+            package = img-clip-nvim;
+            setup = ''
+              require("img-clip").setup {
+                default = {
+                  embed_image_as_base64 = false,
+                  prompt_for_file_name = false,
+                  drag_and_drop = {
+                    insert_mode = true,
+                  },
+                  use_absolute_path = true,
+                },
+              }
+            '';
+          };
+
+          render-markdown = {
+            package = render-markdown-nvim;
+            setup = ''
+              require("render-markdown").setup {
+                file_types = { "markdown", "Avante" },
+              }
+            '';
+          };
+
           blink-cmp = {
             package = blink-cmp;
-            setup = "require('blink.cmp').setup{
-                keymap = { preset = 'default'},
-
+            setup = ''
+              require("blink.cmp").setup{
+                keymap = { preset = "default" },
                 appearance = {
                   use_nvim_cmp_as_default = true,
-                };
-
+                },
                 completion = {
                   accept = {
                     auto_brackets = {
                       enabled = true,
                     },
                   },
-
                   menu = {
                     draw = {
-                      treesitter = {'lsp'},
+                      treesitter = { "lsp" },
                     },
                   },
                   documentation = {
@@ -207,9 +237,44 @@
                     auto_show_delay_ms = 200,
                   },
                 },
-            }
-            ";
+              }
+            '';
             after = ["friendly-snippets"];
+          };
+
+          avante = {
+            package = avante-nvim;
+            setup = ''
+              require("avante_lib").load()
+
+              require("avante").setup{
+                provider = "claude",
+                auto_suggestions_provider = "claude",
+                claude = {
+                  endpoint = "https://api.anthropic.com",
+                  model = "claude-3-5-sonnet-20241022",
+                  max_tokens = 4096,
+                },
+                behaviour = {
+                  auto_suggestions = false,
+                  auto_set_highlight_group = true,
+                  auto_set_keymaps = true,
+                  auto_apply_diff_after_generation = false,
+                  support_paste_from_clipboard = false,
+                  minimize_diff = true,
+                },
+              }
+            '';
+            after = [
+              "dressing-nvim"
+              "plenary-nvim"
+              "nui-nvim"
+              "nvim-cmp"
+              "nvim-web-devicons"
+              "copilot-lua"
+              "img-clip"
+              "render-markdown"
+            ];
           };
         };
 

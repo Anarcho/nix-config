@@ -31,6 +31,8 @@ in {
   };
 
   programs.modules.notes.obsidian.enable = true;
+  programs.modules.music.spotify.enable = true;
+  programs.modules.shell.shell.enable = true;
 
   # Enable home-manager for "anarcho" user
   home-manager.users."anarcho" = {

@@ -1,11 +1,11 @@
 {pkgs, ...}: {
   fonts.fontconfig.enable = true;
   fonts.fontconfig.defaultFonts = {
-    monospace = ["Fira Code"];
+    monospace = ["JetBrainsMono"];
   };
 
   home.packages = with pkgs; [
-    fira-code
-    fira-code-symbols
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
   ];
 }

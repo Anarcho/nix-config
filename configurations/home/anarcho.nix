@@ -19,7 +19,10 @@ in {
     wallpaperImage = "gruv-forest.png";
     defaultBrowser = "firefox";
     enablePolybar = true;
-    colorScheme = "gruvbox-dark-hard";
+    enablePicom = true;
+    enableRofi = true;
+    enableFastfetch = true;
+    colorScheme = "gruvbox-dark-medium";
   };
 
   desktop.homemodules.notes = {

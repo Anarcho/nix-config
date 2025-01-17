@@ -9,12 +9,14 @@ in {
   imports = [
     self.nixosModules.default
     self.nixosModules.wsl
+    self.nixosModules.programs
     ./configuration.nix
   ];
 
   users.defaultUserShell = pkgs.zsh;
 
   programs.zsh.enable = true;
+  programs.modules.shell.shell.enable = true;
 
   nix = {
     registry = {

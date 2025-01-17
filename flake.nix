@@ -18,6 +18,7 @@
     impermanence.url = "github:nix-community/impermanence";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.url = "github:Mic92/sops-nix";
 
     # Nix Colors
     nix-colors.url = "github:misterio77/nix-colors";
@@ -33,6 +34,10 @@
 
     # NVF
     nvf.url = "github:notashelf/nvf";
+
+    # Secrets path
+    mysecrets.url = "git+ssh://git@github.com/Anarcho/nix-secrets.git?shallow=1";
+    mysecrets.flake = false;
   };
 
   # Wired using https://nixos-unified.org/autowiring.html

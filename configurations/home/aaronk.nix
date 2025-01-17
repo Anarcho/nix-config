@@ -11,6 +11,7 @@ in {
   imports = [
     self.homeModules.common
     self.homeModules.home-only
+    inputs.sops-nix.homeManagerModules.sops
   ];
 
   home.username = "aaronk";
