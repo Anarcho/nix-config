@@ -159,10 +159,10 @@
     "mysecrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1737090456,
-        "narHash": "sha256-ieeH+jx8V83fqZvreQ0BCijm31IAUY20QwVHkaPGjrQ=",
+        "lastModified": 1737096597,
+        "narHash": "sha256-pC86aGMirzODtSyPuRPHuqG79z14BVfu1p4J6acZI6o=",
         "ref": "refs/heads/master",
-        "rev": "b67c122fb4888af711cb2c4850c9cd3f707c7d08",
+        "rev": "c6935560f67d19c937f90b2acd3302a5e5a001f6",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/Anarcho/nix-secrets.git"

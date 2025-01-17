@@ -10,7 +10,7 @@ in {
     inputs.sops-nix.nixosModules.sops
   ];
   sops = {
-    defaultSopsFile = "${inputs.mysecrets/secrets.yaml}";
+    defaultSopsFile = "${inputs.mysecrets}/secrets.yaml";
     age = {
       sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
       keyFile = "/var/lib/sops-nix/key.txt";
@@ -21,6 +21,7 @@ in {
         owner = "aaronk";
         group = "users";
         mode = "0400";
+        path = "/run/secrets/anthropic-key";
       };
     };
   };
@@ -28,5 +29,6 @@ in {
   environment.systemPackages = with pkgs; [
     age
     sops
+    ssh-to-age
   ];
 }

@@ -1,10 +1,14 @@
-{lib, ...}: {
+{
+  lib,
+  config,
+  ...
+}: {
   programs = {
     # on macOS, you probably don't need this
     bash = {
       enable = true;
       initExtra = ''
-        # Custom bash profile goes here
+        export ANTHROPIC_API_KEY=$(cat ${config.sops.secrets.anthropic-key.path})
       '';
     };
 
@@ -15,7 +19,6 @@
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       envExtra = ''
-        ANTHROPIC_API_KEY=$(cat ~/key.txt | tr -d '\n')
       '';
       shellAliases = {
         rs = "sudo nixos-rebuild switch --flake .#wsl";
@@ -27,6 +30,7 @@
       history.path = "$HOME/.config/.zsh_history";
       history.ignorePatterns = ["rm *" "pkill *" "cp *"];
       initExtra = ''
+        export ANTHROPIC_API_KEY=$(cat ${config.sops.secrets.anthropic-key.path});
         bindkey -s '^f' 'tms\n'
       '';
       sessionVariables = {

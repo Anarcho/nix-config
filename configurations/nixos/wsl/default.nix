@@ -10,6 +10,7 @@ in {
     self.nixosModules.default
     self.nixosModules.wsl
     self.nixosModules.programs
+    self.nixosModules.sops-nix
     ./configuration.nix
   ];
 
@@ -34,6 +35,13 @@ in {
     gc = {
       automatic = true;
       options = "--delete-older-than 7d";
+    };
+  };
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
     };
   };
 
