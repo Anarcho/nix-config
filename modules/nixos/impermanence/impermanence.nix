@@ -23,9 +23,5 @@
       "/var/lib/private"
       "/var/lib/NetworkManager"
     ];
-
-    files = [
-      "/etc/machine-id"
-    ];
   };
 }

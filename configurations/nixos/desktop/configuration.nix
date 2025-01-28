@@ -18,12 +18,6 @@
       device = "nodev";
       efiSupport = true;
       useOSProber = true;
-      extraEntries = ''
-        menuentry "Windows Boot Manager" {
-          search --fs-uuid --no-floppy --set=root 7AF9-55E4
-          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-        }
-      '';
     };
   };
 
@@ -48,7 +42,6 @@
     neededForBoot = true;
   };
 
-  # Home directory in tmpfs
   fileSystems."/home" = {
     device = "none";
     fsType = "tmpfs";
@@ -84,4 +77,3 @@
 
   system.stateVersion = "24.05";
 }
-
