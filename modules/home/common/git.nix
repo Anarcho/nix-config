@@ -8,8 +8,8 @@
   programs = {
     git = {
       enable = true;
-      userName = "anarcho";
-      userEmail = "johndoe@vm.com";
+      userName = "aaronk";
+      userEmail = "";
       ignores = ["*~" "*.swp"];
       aliases = {
         ci = "commit";

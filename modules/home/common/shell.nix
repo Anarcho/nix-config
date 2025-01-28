@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }: {
   programs = {
@@ -8,7 +9,6 @@
     bash = {
       enable = true;
       initExtra = ''
-        export ANTHROPIC_API_KEY=$(cat ${config.sops.secrets.anthropic-key.path})
       '';
     };
 
@@ -24,14 +24,15 @@
         rs = "sudo nixos-rebuild switch --flake .#wsl";
         jr = "just vm-rebuild";
         jc = "nix flake check";
+        zigdev = "nix develop anarcho#zig -c $SHELL";
       };
       history.size = 10000;
       history.ignoreAllDups = true;
       history.path = "$HOME/.config/.zsh_history";
       history.ignorePatterns = ["rm *" "pkill *" "cp *"];
       initExtra = ''
-        export ANTHROPIC_API_KEY=$(cat ${config.sops.secrets.anthropic-key.path});
         bindkey -s '^f' 'tms\n'
+        bindkey -s '^x' 'clear\n'
       '';
       sessionVariables = {
         EDITOR = "vim";

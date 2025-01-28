@@ -14,6 +14,7 @@
     nil # Nix language server
     nix-info
     nixpkgs-fmt
+		alejandra
     yamlfmt
     just
 

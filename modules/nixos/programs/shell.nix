@@ -14,6 +14,7 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       starship
+      nodejs_18
     ];
 
     programs.starship = {
@@ -22,6 +23,12 @@ in {
         "nerd-font-symbols"
         "gruvbox-rainbow"
       ];
+      settings = {
+        command_timeout = 10000;
+        zig = {
+          symbol = "";
+        };
+      };
     };
   };
 }

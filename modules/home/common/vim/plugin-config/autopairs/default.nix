@@ -1,0 +1,5 @@
+{
+  nvim-autopairs = {
+    enable = true;
+  };
+}

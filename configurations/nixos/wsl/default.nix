@@ -15,9 +15,14 @@ in {
   ];
 
   users.defaultUserShell = pkgs.zsh;
+  users.users.aaronk.shell = pkgs.zsh;
 
-  programs.zsh.enable = true;
+  programs.zsh = {
+    enable = true;
+  };
+
   programs.modules.shell.shell.enable = true;
+  programs.modules.languages.languages.enable = true;
 
   nix = {
     registry = {

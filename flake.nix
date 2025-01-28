@@ -35,6 +35,10 @@
     # NVF
     nvf.url = "github:notashelf/nvf";
 
+    #Neovim
+    nixvim.url = "github:nix-community/nixvim";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
+
     # Secrets path
     mysecrets.url = "git+ssh://git@github.com/Anarcho/nix-secrets.git?shallow=1";
     mysecrets.flake = false;
