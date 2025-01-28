@@ -21,32 +21,37 @@
     };
   };
 
-  fileSystems."/" = {
-    device = "/dev/root_vg/root"; # Root must be persistent
-    fsType = "btrfs";
-    options = ["subvol=root"];
-    neededForBoot = true;
-  };
+  fileSystems = {
+    "/" = {
+      device = "none";
+      fsType = "tmpfs";
+      options = ["defaults" "size=2G" "mode=755"];
+    };
+    "/boot" = {
+      device = "/dev/disk/by-uuid/D0BC-A865";
+      fsType = "vfat";
+      options = ["defaults"];
+      neededForBoot = true;
+    };
 
-  fileSystems."/persist" = {
-    device = "/dev/root_vg/root";
-    fsType = "btrfs";
-    options = ["subvol=persist"];
-    neededForBoot = true;
-  };
+    "/nix" = {
+      device = "/dev/root_vg/root";
+      fsType = "btrfs";
+      options = ["subvol=nix" "compress=zstd" "noatime"];
+    };
 
-  fileSystems."/nix" = {
-    device = "/dev/root_vg/root";
-    fsType = "btrfs";
-    options = ["subvol=nix"];
-    neededForBoot = true;
-  };
+    "/persist" = {
+      device = "/dev/root_vg/root";
+      fsType = "btrfs";
+      options = ["subvol=persist" "compress=zstd" "noatime"];
+      neededForBoot = true;
+    };
 
-  fileSystems."/home" = {
-    device = "none";
-    fsType = "tmpfs";
-    options = ["defaults" "size=25%" "mode=755"];
-    neededForBoot = true;
+    "/home" = {
+      device = "none";
+      fsType = "tmpfs";
+      options = ["defaults" "size=25%" "mode=755"];
+    };
   };
 
   users.users.anarcho = {
