@@ -9,6 +9,7 @@
 in {
   imports = [
     self.nixosModules.default
+    self.nixosModules.impermanence
     self.nixosModules.desktop
     self.nixosModules.programs
     ./configuration.nix
@@ -30,6 +31,7 @@ in {
   programs.modules.music.spotify.enable = true;
   programs.modules.shell.shell.enable = true;
 
+  # Enable home-manager for "anarcho" user
   home-manager.users."anarcho" = {
     imports = [(self + /configurations/home/anarcho.nix)];
   };
