@@ -1,5 +1,6 @@
 {
   imports = [
+    ./hardware-configuration.nix
   ];
 
   networking.nameservers = ["8.8.8.8" "1.1.1.1" "8.8.4.4"];
@@ -10,32 +11,44 @@
 
   boot.loader = {
     efi.canTouchEfiVariables = true;
+    efi.efiSysMountPoint = "/boot";
+
     grub = {
       enable = true;
       device = "nodev";
       efiSupport = true;
       useOSProber = true;
+      extraEntries = ''
+        menuentry "Windows Boot Manager" {
+          search --fs-uuid --no-floppy --set=root 7AF9-55E4
+          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+      '';
     };
   };
 
   fileSystems."/" = {
-    device = "none";
-    fsType = "tmpfs";
-    options = ["defaults" "size=25%" "mode=755"];
+    device = "/dev/root_vg/root"; # Root must be persistent
+    fsType = "btrfs";
+    options = ["subvol=root"];
+    neededForBoot = true;
   };
 
   fileSystems."/persist" = {
     device = "/dev/root_vg/root";
-    neededForBoot = true;
     fsType = "btrfs";
     options = ["subvol=persist"];
+    neededForBoot = true;
   };
 
   fileSystems."/nix" = {
     device = "/dev/root_vg/root";
     fsType = "btrfs";
     options = ["subvol=nix"];
+    neededForBoot = true;
   };
+
+  # Home directory in tmpfs
   fileSystems."/home" = {
     device = "none";
     fsType = "tmpfs";
@@ -71,3 +84,4 @@
 
   system.stateVersion = "24.05";
 }
+
