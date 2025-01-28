@@ -25,15 +25,8 @@ in {
     colorScheme = "gruvbox-dark-medium";
   };
 
-  desktop.homemodules.notes = {
-    obsidianVaultsEnabled = true;
-    vaultPath = "/home/anarcho/obsidian";
-    vaults = [
-      {
-        name = "personal";
-      }
-    ];
-  };
+  common.modules.editor.nixvim.enable = false;
+  common.modules.editor.nvf.enable = true;
 
   home.username = "anarcho";
   home.homeDirectory = "/home/anarcho";
