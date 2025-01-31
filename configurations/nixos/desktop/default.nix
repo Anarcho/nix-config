@@ -18,18 +18,28 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   users.defaultUserShell = pkgs.zsh;
+  users.users.anarcho.shell = pkgs.zsh;
 
+  programs.modules.languages.languages.enable = true;
   programs.zsh.enable = true;
 
   desktop.modules.wm.bspwm = {
     enable = true;
     isVirtualMachine = true;
-    videoDrivers = ["virtualbox"];
+    videoDrivers = ["nvidia"];
   };
 
   programs.modules.notes.obsidian.enable = true;
   programs.modules.music.spotify.enable = true;
   programs.modules.shell.shell.enable = true;
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
+  };
 
   # Enable home-manager for "anarcho" user
   home-manager.users."anarcho" = {

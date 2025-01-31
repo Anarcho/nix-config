@@ -62,13 +62,4 @@
       silent = true;
     };
   }
-  {
-    mode = "n";
-    key = "<leader>lh";
-    action = "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<cr>";
-    options = {
-      desc = "Toggle inlay hints";
-      silent = true;
-    };
-  }
 ]

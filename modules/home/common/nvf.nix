@@ -291,7 +291,7 @@ in {
                   },
                 }
               '';
-              after = ["neotest-zig" "plenary-nvim" "nvim-treesitter" "FixCursorHold-nvim"];
+              after = ["neotest-zig" "plenary-nvim" "nviom-treesitter" "FixCursorHold-nvim"];
             };
 
             neotest-zig = {
@@ -333,112 +333,6 @@ in {
                 }
               '';
             };
-            rest = {
-              package = rest-nvim;
-              setup = ''
-                require('rest-nvim').setup({
-                  -- Result window configurations
-                  result = {
-                    show_url = true,
-                    show_http_info = true,
-
-                    show_headers = true,
-                    formatters = {
-                      json = "jq",
-                      html = function(body)
-                        return vim.fn.system({"tidy", "-i", "-q", "-"}, body)
-                      end
-                    },
-                  },
-                  -- Request configuration
-                  request = {
-                    skip_ssl_verification = false,
-                    hooks = {
-                      encode_url = true,
-                      user_agent = "rest.nvim",
-                      set_content_type = true,
-                    },
-                  },
-                  -- Response configuration
-                  response = {
-                    hooks = {
-                      decode_url = true,
-                      format = true,
-                    },
-                  },
-                  -- Environment configuration
-                  env = {
-                    enable = true,
-                    pattern = ".*%.env.*"  -- Pattern to match env files
-                  },
-
-                  -- UI configuration
-                  ui = {
-                    winbar = true,
-                    keybinds = {
-                      prev = "H",
-                      next = "L",
-                    },
-                  },
-                  highlight = {
-                    enable = true,
-                    timeout = 750,
-
-                  }
-                })
-              '';
-              after = ["nvim-treesitter" "tree-sitter-http"];
-            };
-
-            nvim-lspconfig-http = {
-              package = nvim-lspconfig;
-              setup = ''
-                local lspconfig = require('lspconfig')
-
-                lspconfig.html.setup({
-                  cmd = { "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-html-language-server", "--stdio" },
-                  filetypes = { "http" },  -- Add http to filetypes
-                  root_dir = function()
-                    return vim.fn.getcwd()
-                  end,
-                  init_options = {
-                    provideFormatter = false,
-                    embeddedLanguages = { http = true },
-                    configurationSection = { "http", "html" }
-                  },
-                })
-              '';
-              after = ["nvim-lspconfig"];
-            };
-
-            nvim-lspconfig-json = {
-              package = nvim-lspconfig;
-              setup = ''
-                require('lspconfig').jsonls.setup({
-                  cmd = { "${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-json-language-server", "--stdio" },
-                  filetypes = { "json", "jsonc" },
-                  init_options = {
-                    provideFormatter = true,
-                    validate = { enable = true },
-                  },
-                  settings = {
-                    json = {
-                      schemas = require('schemastore').json.schemas(),
-                      validate = { enable = true },
-                    },
-                  },
-                })
-              '';
-              after = ["nvim-lspconfig"];
-            };
-            schemastore-nvim = {
-              package = SchemaStore-nvim;
-              after = ["nvim-lspconfig"];
-            };
-            tree-sitter-http = {
-              package = nvim-treesitter-parsers.http;
-              after = ["nvim-treesitter"];
-            };
           };
 
           luaConfigPost = ''
@@ -459,33 +353,7 @@ in {
             end
             })
 
-            vim.filetype.add({
-              extension = {
-                http = "http",
-              },
-            })
 
-            -- Set up HTTP file options
-            vim.api.nvim_create_autocmd("FileType", {
-              pattern = "http",
-              callback = function()
-                vim.opt_local.expandtab = true
-                vim.opt_local.shiftwidth = 2
-                vim.opt_local.softtabstop = 2
-                vim.opt_local.commentstring = "# %s"
-              end,
-            })
-
-            -- JSON file settings
-            vim.api.nvim_create_autocmd("FileType", {
-              pattern = { "json", "jsonc" },
-              callback = function()
-                vim.opt_local.expandtab = true
-                vim.opt_local.shiftwidth = 2
-                vim.opt_local.tabstop = 2
-                vim.opt_local.formatexpr = "v:lua.vim.lsp.formatexpr()"
-              end,
-            })
           '';
 
           keymaps = [
@@ -739,61 +607,6 @@ in {
               silent = true;
               action = ":OverseerRun<CR>";
             }
-            # REST client keybindings
-            {
-              key = "<leader>r";
-              desc = "+Rest";
-              mode = "n";
-              action = "nop";
-            }
-            {
-              key = "<leader>rr";
-              desc = "Run request under cursor";
-              mode = "n";
-              silent = true;
-              action = ":Rest run<CR>";
-            }
-            {
-              key = "<leader>rl";
-              desc = "Run last request";
-              mode = "n";
-              silent = true;
-              action = ":Rest last<CR>";
-            }
-            {
-              key = "<leader>rp";
-              desc = "Preview request curl command";
-              mode = "n";
-              silent = true;
-              action = ":Rest preview<CR>";
-            }
-            {
-              key = "<leader>h";
-              desc = "+HTTP";
-              mode = "n";
-              action = "nop";
-            }
-            {
-              key = "<leader>hr";
-              desc = "Run request under cursor";
-              mode = "n";
-              silent = true;
-              action = ":Rest run<CR>";
-            }
-            {
-              key = "<leader>hl";
-              desc = "Re-run last request";
-              mode = "n";
-              silent = true;
-              action = ":Rest last<CR>";
-            }
-            {
-              key = "<leader>he";
-              desc = "Edit environment file";
-              mode = "n";
-              silent = true;
-              action = ":Rest env show<CR>";
-            }
             # Misc
             {
               key = "<ESC>";
@@ -808,13 +621,6 @@ in {
               mode = "n";
               silent = true;
               action = ":LspRestart<CR>";
-            }
-            {
-              key = "<leader>S";
-              desc = "Lsp start";
-              mode = "n";
-              silent = true;
-              action = ":LspStart<CR>";
             }
           ];
         };

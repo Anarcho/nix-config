@@ -1,7 +1,7 @@
 {
   lsp = {
     enable = true;
-    inlayHints = false;
+    inlayHints = true;
     servers = {
       ansiblels.enable = true;
       bashls.enable = true;

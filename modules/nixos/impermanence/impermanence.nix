@@ -54,6 +54,8 @@
       }
     ];
     files = [
+      ".zshrc"
+      ".bashrc"
     ];
   };
 }

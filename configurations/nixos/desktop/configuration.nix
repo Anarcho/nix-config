@@ -4,6 +4,7 @@
   ];
 
   networking.nameservers = ["8.8.8.8" "1.1.1.1" "8.8.4.4"];
+
   time.timeZone = "Australia/Brisbane";
 
   nixpkgs.hostPlatform = "x86_64-linux";
@@ -27,7 +28,7 @@
       options = ["defaults" "size=2G" "mode=755"];
     };
     "/boot" = {
-      device = "/dev/disk/by-uuid/D0BC-A865";
+      device = "/dev/disk/by-uuid/EA2B-B20B";
       fsType = "vfat";
       options = ["defaults"];
       neededForBoot = true;
@@ -57,6 +58,7 @@
     isNormalUser = true;
     initialPassword = "pass";
     extraGroups = ["wheel" "networkmanager"];
+    home = "/home/anarcho";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFuUz6JTu3ZB93YDEtck7IxaZ6lKpAslwMls9IpTbpMN anarcho@nix"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKq7kAc2P4mDl78iRDl/XItrac0BATHNNWWAFYuavlow anarcho@nixvm"
@@ -66,7 +68,6 @@
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  virtualisation.virtualbox.guest.enable = true;
   services.openssh = {
     enable = true;
     settings = {
@@ -77,6 +78,18 @@
 
   security = {
     sudo.wheelNeedsPassword = false;
+  };
+
+  systemd.services.fix-home-permissioins = {
+    description = "Fix user home permissions";
+    after = ["local-fs.target"];
+    wantedBy = ["multi-user.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = ''
+        /run/current-system/sw/bin/chown -R anarcho:users /home/anarcho
+      '';
+    };
   };
 
   system.stateVersion = "24.05";
