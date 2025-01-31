@@ -12,6 +12,7 @@ in {
     self.homeModules.common
     self.homeModules.nix
     inputs.nix-colors.homeManagerModules.default
+    inputs.impermanence.homeManagerModules.impermanence
   ];
 
   desktop.homemodules.wm = {
@@ -23,6 +24,25 @@ in {
     enableRofi = true;
     enableFastfetch = true;
     colorScheme = "gruvbox-dark-medium";
+  };
+
+  home.persistence."/persist/home/anarcho" = {
+    allowOther = true;
+    directories = [
+      "Repos"
+      ".config"
+      ".ssh"
+      ".cache"
+      ".local/share"
+    ];
+
+    files = [
+      ".bash_history"
+      ".zsh_history"
+      ".xinitrc"
+      ".Xresources"
+      ".Xauthority"
+    ];
   };
 
   common.modules.editor.nixvim.enable = false;

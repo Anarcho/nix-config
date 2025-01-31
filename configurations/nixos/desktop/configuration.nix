@@ -4,7 +4,6 @@
   ];
 
   networking.nameservers = ["8.8.8.8" "1.1.1.1" "8.8.4.4"];
-
   time.timeZone = "Australia/Brisbane";
 
   nixpkgs.hostPlatform = "x86_64-linux";
