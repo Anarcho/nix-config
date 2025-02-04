@@ -18,14 +18,13 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   users.defaultUserShell = pkgs.zsh;
-  users.users.anarcho.shell = pkgs.zsh;
 
   programs.modules.languages.languages.enable = true;
   programs.zsh.enable = true;
 
   desktop.modules.wm.bspwm = {
     enable = true;
-    isVirtualMachine = true;
+    isVirtualMachine = false;
     videoDrivers = ["nvidia"];
   };
 

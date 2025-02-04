@@ -42,6 +42,8 @@ in {
       ".xinitrc"
       ".Xresources"
       ".Xauthority"
+      ".xsession"
+      ".xsession-errors"
     ];
   };
 

@@ -110,6 +110,12 @@ in {
     xsession.windowManager.bspwm = {
       enable = true;
       extraConfig = ''
+        sleep 1
+
+        systemctl --user restart polybar
+
+        sleep 2
+
         # Workspace setup
         bspc monitor -d ${concatStringsSep " " (attrValues workspaces)}
 

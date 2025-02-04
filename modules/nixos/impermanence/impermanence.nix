@@ -52,10 +52,18 @@
         group = "users";
         mode = "0700";
       }
+      {
+        directory = "/home/anarcho/.local/state";
+        user = "anarcho";
+        group = "users";
+        mode = "0700";
+      }
     ];
     files = [
-      ".zshrc"
-      ".bashrc"
+      "/home/anarcho/.Xauthority"
+      "/home/anarcho/.xsession"
+      "/home/anarcho/.xsession-errors"
+      "/home/anarcho/.Xresources"
     ];
   };
 }

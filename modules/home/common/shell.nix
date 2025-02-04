@@ -15,10 +15,11 @@
     # For macOS's default shell.
     zsh = {
       enable = true;
-      dotDir = ".config/zsh";
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
+      dotDir = ".config/zsh";
       envExtra = ''
+        export ZDOTDIR="$HOME/.config/zsh"
       '';
       shellAliases = {
         rs = "sudo nixos-rebuild switch --flake .#wsl";
@@ -28,7 +29,7 @@
       };
       history.size = 10000;
       history.ignoreAllDups = true;
-      history.path = "$HOME/.config/.zsh_history";
+      history.path = "$ZDOTDIR/.zsh_history";
       history.ignorePatterns = ["rm *" "pkill *" "cp *"];
       initExtra = ''
         bindkey -s '^f' 'tms\n'

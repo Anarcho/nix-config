@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -57,6 +57,7 @@
   users.users.anarcho = {
     isNormalUser = true;
     initialPassword = "pass";
+    shell = pkgs.zsh;
     extraGroups = ["wheel" "networkmanager"];
     home = "/home/anarcho";
     openssh.authorizedKeys.keys = [

@@ -30,8 +30,6 @@ in
     config = mkIf cfg.enable {
       services.picom = {
         enable = true;
-        activeOpacity = 0.8;
-        inactiveOpacity = 0.8;
       };
     };
   }
