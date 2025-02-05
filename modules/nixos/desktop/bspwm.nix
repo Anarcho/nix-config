@@ -37,10 +37,7 @@ in {
     services = {
       xserver = {
         enable = true;
-        videoDrivers =
-          if cfg.isVirtualMachine
-          then ["virtualbox" "modesetting"]
-          else cfg.videoDrivers;
+        videoDrivers = ["nvidia"];
 
         # Window manager configuration
         windowManager.bspwm = {

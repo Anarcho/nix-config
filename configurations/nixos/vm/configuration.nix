@@ -7,7 +7,7 @@
 
   time.timeZone = "Australia/Brisbane";
 
-  nixpkgs.hostPlatform = "x86_64-linux";
+  nixpkgs.hostPlatform = {system = "x86_64-linux";};
 
   boot.loader = {
     efi.canTouchEfiVariables = true;

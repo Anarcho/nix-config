@@ -17,9 +17,7 @@
       enable = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      dotDir = ".config/zsh";
       envExtra = ''
-        export ZDOTDIR="$HOME/.config/zsh"
       '';
       shellAliases = {
         rs = "sudo nixos-rebuild switch --flake .#wsl";

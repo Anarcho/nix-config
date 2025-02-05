@@ -28,6 +28,7 @@ in {
 
   home.persistence."/persist/home/anarcho" = {
     allowOther = true;
+    removePrefixDirectory = true;
     directories = [
       "Repos"
       ".config"
@@ -44,6 +45,9 @@ in {
       ".Xauthority"
       ".xsession"
       ".xsession-errors"
+      ".zshrc"
+      ".zsh_history"
+      ".zshenv"
     ];
   };
 
