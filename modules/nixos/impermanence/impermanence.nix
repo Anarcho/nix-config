@@ -21,5 +21,25 @@
       "/var/lib/private"
       "/var/lib/NetworkManager"
     ];
+    users.anarcho = {
+      directories = [
+        "Repos"
+        ".config"
+        ".ssh"
+        ".cache"
+        ".local/share"
+      ];
+      files = [
+        ".bash_history"
+        ".zsh_history"
+        ".xinitrc"
+        ".Xresources"
+        ".Xauthority"
+        ".xsession"
+        ".xsession-errors"
+        ".zshrc"
+        ".zshenv"
+      ];
+    };
   };
 }

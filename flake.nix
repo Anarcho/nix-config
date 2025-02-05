@@ -3,9 +3,7 @@
 
   inputs = {
     # Principle inputs (updated by `nix run .#update`)
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs?rev=d2faa1bbca1b1e4962ce7373c5b0879e5b12cef2";
 
     nixos-wsl.url = "github:nix-community/NixOs-WSL/main";
 
@@ -26,11 +24,6 @@
     # Software inputs
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-
-    # TMUX Sessionizer
-    tmux-sessionizer.url = "github:jrmoulton/tmux-sessionizer";
-    tmux-sessionizer.inputs.nixpkgs.follows = "nixpkgs";
-    tmux-sessionizer.inputs.flake-parts.follows = "flake-parts";
 
     # NVF
     nvf.url = "github:notashelf/nvf";

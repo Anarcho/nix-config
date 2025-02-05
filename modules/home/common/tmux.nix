@@ -68,7 +68,6 @@ in {
   };
 
   home.packages = with pkgs; [
-    inputs.tmux-sessionizer.packages.${pkgs.system}.default
     fzf
   ];
 }
