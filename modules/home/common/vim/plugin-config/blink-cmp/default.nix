@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   blink-cmp = {
     enable = true;
-
     settings = {
       appearance = {
         kind_icons = {
@@ -38,87 +37,55 @@
           Variable = "󰆦";
         };
       };
-
       completion = {
         accept = {
           auto_brackets = {
-            enabled = false;
+            enabled = true;
           };
         };
-
         documentation = {
           auto_show = true;
-          auto_show_delay_ms = 200;
-        };
-
-        ghost_text = {
-          enabled = true;
         };
       };
-
-      fuzzy = {
-        prebuilt_binaries = {
-          download = false;
-          force_version = "v${pkgs.vimPlugins.blink-cmp.version}";
-        };
-      };
-
       snippets = {
         preset = "luasnip";
-      };
-      sources = {
-        default = [
-          "lsp"
-          "path"
-          "snippets"
-          "buffer"
-          #"copilot"
-          #"lazydev"
-        ];
+        expand.__raw = ''
+          function(snippet) require('luasnip').lsp_expand(snippet) end
+        '';
+        active.__raw = ''
+          function(filter)
+            if filter and filter.direction then
 
-        providers = {
-          lsp = {
-            name = "LSP";
-            module = "blink.cmp.sources.lsp";
-            async = false;
-            enabled = true;
-            max_items = null;
-            min_keyword_length = 0;
-            override = null;
-            score_offset = 0;
-            should_show_items = true;
-            timeout_ms = 2000;
-
-            fallbacks = [
-              "buffer"
-            ];
-          };
-          path = {
-            name = "Path";
-            module = "blink.cmp.sources.path";
-            score_offset = 3;
-
-            fallbacks = [
-              "buffer"
-            ];
-
-            opts = {
-              label_trailing_slash = true;
-
-              show_hidden_files_by_default = false;
-              trailing_slash = false;
-            };
-          };
-          buffer = {
-            name = "Buffer";
-            module = "blink.cmp.sources.buffer";
-          };
-        };
+              return require('luasnip').jumpable(filter.direction)
+            end
+            return require('luasnip').in_snippet()
+          end
+        '';
+        jump.__raw = ''
+          function(direction) require('luasnip').jump(direction) end
+        '';
       };
 
+      keymap = {
+        preset = "super-tab";
+      };
       signature = {
         enabled = true;
       };
+      sources = {
+        cmdline = [];
+        providers = {
+          buffer = {
+            score_offset = -7;
+          };
+          lsp = {
+            fallbacks = [];
+          };
+        };
+      };
     };
+  };
+  blink-compat = {
+    enable = true;
   };
 }

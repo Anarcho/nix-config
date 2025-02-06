@@ -11,11 +11,10 @@ in {
   imports = [
     self.homeModules.common
     self.homeModules.home-only
-    inputs.sops-nix.homeManagerModules.sops
   ];
 
-  common.modules.editor.nvf.enable = true;
-  common.modules.editor.nixvim.enable = false;
+  common.modules.editor.nvf.enable = false;
+  common.modules.editor.nixvim.enable = true;
 
   home.username = "aaronk";
   home.homeDirectory = "/home/aaronk";

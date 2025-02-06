@@ -15,7 +15,11 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       nodejs_18 # used for copilot
+      nodePackages.vscode-langservers-extracted
       stdenv.cc.cc.lib
+      jq
+      html-tidy
+      curl
     ];
   };
 }

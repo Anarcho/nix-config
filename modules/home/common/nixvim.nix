@@ -37,7 +37,6 @@ in {
         termguicolors = true;
         ignorecase = true;
       };
-
       autoCmd = [
         {
           event = ["TextYankPost"];
@@ -68,8 +67,6 @@ in {
         {
           lspkind.enable = true;
           lspsaga.enable = true;
-          blink-cmp.enable = true;
-          luasnip.enable = true;
           lualine.enable = true;
           web-devicons.enable = true;
           alpha.enable = true;
@@ -82,16 +79,17 @@ in {
           ts-autotag.enable = true;
           ts-context-commentstring.enable = true;
           render-markdown.enable = true;
-          friendly-snippets.enable = true;
         }
         // (import ./vim/plugin-config/lsp)
-        // (import ./vim/plugin-config/blink-cmp {inherit pkgs;})
+        #// (import ./vim/plugin-config/blink-cmp {inherit pkgs;})
         // (import ./vim/plugin-config/luasnip)
         // (import ./vim/plugin-config/lualine)
         // (import ./vim/plugin-config/alpha)
         // (import ./vim/plugin-config/oil)
         #// (import ./vim/plugin-config/neotest) # cfg
         // (import ./vim/plugin-config/notify)
+        // (import ./vim/plugin-config/none-ls)
+        // (import ./vim/plugin-config/nvim-cmp)
         // (import ./vim/plugin-config/noice) {inherit pkgs;}
         // (import ./vim/plugin-config/treesitter) {inherit pkgs;}
         // (import ./vim/plugin-config/treesitter-context)

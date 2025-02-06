@@ -1,7 +1,7 @@
 {
   lsp = {
     enable = true;
-    inlayHints = true;
+    inlayHints = false;
     servers = {
       ansiblels.enable = true;
       bashls.enable = true;
@@ -17,7 +17,7 @@
       lua_ls.enable = true;
       pylsp.enable = true;
       pylyzer.enable = false;
-      ruff_lsp.enable = true;
+      ruff.enable = true;
       superhtml.enable = true;
       zls.enable = true;
 

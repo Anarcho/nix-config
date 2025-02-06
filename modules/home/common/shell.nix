@@ -15,6 +15,7 @@
     # For macOS's default shell.
     zsh = {
       enable = true;
+      dotDir = ".config/zsh";
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
       dotDir = ".config/zsh";
