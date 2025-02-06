@@ -14,11 +14,13 @@
     nil # Nix language server
     nix-info
     nixpkgs-fmt
-		alejandra
+    alejandra
     yamlfmt
     just
 
     playerctl
+
+    tmux-sessionizer
   ];
 
   # Programs natively supported by home-manager.

@@ -82,17 +82,5 @@
     sudo.wheelNeedsPassword = false;
   };
 
-  systemd.services.fix-home-permissioins = {
-    description = "Fix user home permissions";
-    after = ["local-fs.target"];
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = ''
-        /run/current-system/sw/bin/chown -R anarcho:users /home/anarcho
-      '';
-    };
-  };
-
   system.stateVersion = "24.05";
 }

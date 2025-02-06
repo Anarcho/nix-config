@@ -30,15 +30,12 @@
         ".local/share"
       ];
       files = [
-        ".bash_history"
-        ".zsh_history"
         ".xinitrc"
         ".Xresources"
         ".Xauthority"
         ".xsession"
         ".xsession-errors"
         ".zshrc"
-        ".zshenv"
       ];
     };
   };

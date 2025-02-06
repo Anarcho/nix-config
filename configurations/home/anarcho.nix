@@ -26,33 +26,8 @@ in {
     colorScheme = "gruvbox-dark-medium";
   };
 
-  home.persistence."/persist/home/anarcho" = {
-    allowOther = true;
-    removePrefixDirectory = true;
-    directories = [
-      "Repos"
-      ".config"
-      ".ssh"
-      ".cache"
-      ".local/share"
-    ];
-
-    files = [
-      ".bash_history"
-      ".zsh_history"
-      ".xinitrc"
-      ".Xresources"
-      ".Xauthority"
-      ".xsession"
-      ".xsession-errors"
-      ".zshrc"
-      ".zsh_history"
-      ".zshenv"
-    ];
-  };
-
-  common.modules.editor.nixvim.enable = false;
-  common.modules.editor.nvf.enable = true;
+  common.modules.editor.nixvim.enable = true;
+  common.modules.editor.nvf.enable = false;
 
   home.username = "anarcho";
   home.homeDirectory = "/home/anarcho";
