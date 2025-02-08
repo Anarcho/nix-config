@@ -44,4 +44,12 @@
       silent = true;
     };
   }
+  {
+    mode = "n";
+    key = "<ESC>";
+    action = ":nohlsearch<CR>";
+    options = {
+      silent = true;
+    };
+  }
 ]

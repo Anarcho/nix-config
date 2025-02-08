@@ -62,4 +62,22 @@
       silent = true;
     };
   }
+  {
+    mode = "n";
+    key = "<leader>R";
+    action = ":LspRestart<CR>";
+    options = {
+      desc = "Restart Lsp";
+      silent = true;
+    };
+  }
+  {
+    mode = "n";
+    key = "<leader>S";
+    action = ":LspStart<CR>";
+    options = {
+      desc = "Start Lsp";
+      silent = true;
+    };
+  }
 ]

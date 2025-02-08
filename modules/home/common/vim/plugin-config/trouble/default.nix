@@ -1,0 +1,5 @@
+{
+  trouble = {
+    enable = true;
+  };
+}

@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
   lsp = {
     enable = true;
     inlayHints = false;
@@ -10,17 +10,20 @@
       emmet_ls.enable = true;
       golangci_lint_ls.enable = true;
       gopls.enable = true;
-      html.enable = true;
       java_language_server.enable = false;
       jdtls.enable = false;
-      jsonls.enable = true;
       lua_ls.enable = true;
       pylsp.enable = true;
       pylyzer.enable = false;
       ruff.enable = true;
-      superhtml.enable = true;
-      zls.enable = true;
-
+      zls = {
+        enable = true;
+        extraOptions = {
+          zls = {
+            enable_snippets = true;
+          };
+        };
+      };
       nixd = {
         enable = true;
 
@@ -34,6 +37,42 @@
         enable = true;
         filetypes = ["yaml"];
       };
+      html = {
+        enable = true;
+        filetypes = ["http"];
+        cmd = ["${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-html-language-server" "--stdio"];
+        rootDir.__raw = "function() return vm.fn.getcwd() end";
+        settings = {
+          init_options = {
+            provideFormatter = false;
+            embeddedLanguages = {http = true;};
+            configurationSection = ["http" "html"];
+          };
+        };
+      };
+      jsonls = {
+        enable = true;
+        filetypes = ["json" "jsonc"];
+        cmd = ["${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-json-language-server" "--stdio"];
+        settings = {
+          init_options = {
+            provideFormatter = true;
+            validate = {
+              enable = true;
+            };
+            json = {
+              schemas.__raw = "require('schemastore').json.schemas()";
+              validate = {
+                enable = true;
+              };
+            };
+          };
+        };
+      };
     };
+  };
+  schemastore = {
+    enable = true;
+    json.enable = true;
   };
 }

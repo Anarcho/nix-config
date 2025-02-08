@@ -18,7 +18,6 @@
       dotDir = ".config/zsh";
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      dotDir = ".config/zsh";
       envExtra = ''
       '';
       shellAliases = {

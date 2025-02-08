@@ -3,7 +3,7 @@
 
   inputs = {
     # Principle inputs (updated by `nix run .#update`)
-    nixpkgs.url = "github:NixOS/nixpkgs?rev=d2faa1bbca1b1e4962ce7373c5b0879e5b12cef2";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     nixos-wsl.url = "github:nix-community/NixOs-WSL/main";
 
@@ -26,7 +26,7 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     # NVF
-    nvf.url = "github:notashelf/nvf";
+    #nvf.url = "github:notashelf/nvf";
 
     #Neovim
     nixvim.url = "github:nix-community/nixvim";

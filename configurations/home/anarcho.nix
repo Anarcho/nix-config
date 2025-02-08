@@ -27,7 +27,6 @@ in {
   };
 
   common.modules.editor.nixvim.enable = true;
-  common.modules.editor.nvf.enable = false;
 
   home.username = "anarcho";
   home.homeDirectory = "/home/anarcho";

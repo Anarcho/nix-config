@@ -1,0 +1,5 @@
+{
+  overseer = {
+    enable = true;
+  };
+}
