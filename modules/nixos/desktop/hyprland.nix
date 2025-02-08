@@ -16,7 +16,13 @@ in {
       xwayland.enable = true;
     };
 
-    services.xserver.videoDrivers = ["nvidia"];
+    services = {
+      xserver.videoDrivers = ["nvidia"];
+      displayManager = {
+        sddm.enable = true;
+        sddm.wayland.enable = true;
+      };
+    };
 
     hardware.graphics.enable = true;
 
