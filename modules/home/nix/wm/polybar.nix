@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.desktop.homemodules.wm.modules.polybar;
+  isBspwm = config.xsession.windowManager.bspwm.enable or false;
 
   # Color definitions
   colors = {
@@ -130,7 +131,7 @@ in
       };
     };
 
-    config = mkIf cfg.enable {
+    config = mkIf (cfg.enable && isBspwm) {
       home.packages = with pkgs; [
         d2coding
         unifont

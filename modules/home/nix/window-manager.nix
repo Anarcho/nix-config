@@ -11,15 +11,6 @@ with lib; let
   inherit (inputs) self;
   cfg = config.desktop.homemodules.wm;
 
-  # Workspace definitions
-  workspaces = {
-    ws1 = "1";
-    ws2 = "2";
-    ws3 = "3";
-    ws4 = "4";
-    ws5 = "5";
-  };
-
   # Detect active window manager
   isBspwm = osConfig.services.xserver.windowManager.bspwm.enable or false;
   isHyprland = osConfig.programs.hyprland.enable or false;
@@ -68,11 +59,9 @@ in {
     };
 
     # BSPWM-specific options
-
     enablePolybar = mkOption {
       type = types.bool;
       default = false;
-
       description = "Enable polybar (BSPWM only)";
     };
 
@@ -96,7 +85,6 @@ in {
 
     colorScheme = mkOption {
       type = types.str;
-
       default = "gruvbox-dark-medium";
       description = "Color scheme used for window manager";
     };
@@ -116,9 +104,8 @@ in {
   };
 
   config = mkMerge [
-    # BSPWM Configuration
-
-    (mkIf isBspwm {
+    # Common configuration (applies to both WMs)
+    (mkIf (isBspwm || isHyprland) {
       assertions = [
         {
           assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
@@ -130,17 +117,37 @@ in {
         }
       ];
 
+      # Common wallpaper service
+      systemd.user.services.wallpaper = {
+        Unit = {
+          Description = "Set wallpaper";
+          After = ["graphical-session-pre.target"];
+          PartOf = ["graphical-session.target"];
+        };
+        Install.WantedBy = ["graphical-session.target"];
+        Service = {
+          ExecStart =
+            if isBspwm
+            then "${pkgs.feh}/bin/feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}"
+            else "${pkgs.hyprpaper}/bin/hyprpaper";
+          Type = "oneshot";
+        };
+      };
+    })
+
+    # BSPWM-specific configuration
+    (mkIf isBspwm {
       xsession.windowManager.bspwm = {
         enable = true;
         extraConfig = ''
           sleep 1
 
-          systemctl --user restart polybar
+          ${optionalString cfg.enablePolybar "systemctl --user restart polybar"}
 
           sleep 2
 
           # Workspace setup
-          bspc monitor -d ${concatStringsSep " " (attrValues workspaces)}
+          bspc monitor -d 1 2 3 4 5
 
           # Window appearance
           bspc config top_padding         35
@@ -172,7 +179,7 @@ in {
           "super + d" = "${pkgs.rofi}/bin/rofi -show drun";
           "super + q" = "bspc node -c";
           "super + l" = "${pkgs.i3lock}/bin/i3lock";
-          "super + p" = "${pkgs.polybar}/bin/polybar-msg cmd restart & ${pkgs.bspwm}/bin/bspc wm -r";
+          "super + p" = "${optionalString cfg.enablePolybar "${pkgs.polybar}/bin/polybar-msg cmd restart &"} ${pkgs.bspwm}/bin/bspc wm -r";
 
           # WM control
           "super + alt + {q,r}" = "bspc {quit,wm -r}";
@@ -188,8 +195,7 @@ in {
         };
       };
 
-      # BSPWM-specific modules
-      desktop.homemodules.wm.modules = {
+      desktop.homemodules.wm.modules = mkIf isBspwm {
         polybar = mkIf cfg.enablePolybar {
           enable = true;
           colorScheme = colorScheme;
@@ -202,37 +208,21 @@ in {
           colorScheme = colorScheme;
           terminal = cfg.defaultTerminal;
         };
-        fastfetch = mkIf cfg.enableFastfetch {
-          enable = true;
-          colorScheme = colorScheme;
-        };
       };
 
-      # BSPWM-specific packages
-      home.packages = with pkgs; [
-        feh
-        i3lock
-        sxhkd
-        xdo
-        wmname
-      ];
+      home.packages = with pkgs;
+        [
+          feh
+          i3lock
+          sxhkd
+          xdo
+          wmname
+        ]
+        ++ (optionals cfg.enablePolybar [polybar]);
     })
 
     # Hyprland Configuration
     (mkIf isHyprland {
-      assertions = [
-        {
-          assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
-          message = "Terminal '${cfg.defaultTerminal}' not found in installed packages.";
-        }
-        {
-          assertion = any (p: p.pname or p.name == cfg.defaultBrowser) config.home.packages;
-          message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
-        }
-      ];
-
-      # add option later
-      #$menu = ${pkgs.wofi}/bin/wofi --show drun
       wayland.windowManager.hyprland = {
         enable = true;
         extraConfig = ''
@@ -242,6 +232,7 @@ in {
           # Set variables
           $terminal = ${pkgs.${cfg.defaultTerminal}}/bin/${cfg.defaultTerminal}
           $browser = ${pkgs.${cfg.defaultBrowser}}/bin/${cfg.defaultBrowser}
+          $menu = ${pkgs.wofi}/bin/wofi --show drun
 
           # Keybinds
           bind = SUPER, Return, exec, $terminal
@@ -278,55 +269,22 @@ in {
             col.active_border = ${colors.primary}
             col.inactive_border = ${colors.foreground}
           }
+
+          exec-once = hyprpaper
         '';
       };
+      desktop.homemodules.wm.modules.hyprpaper = {
+        enable = true;
+        monitor = "eDP-1";
+        wallPaper = "/home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}";
+      };
 
-      # Hyprland-specific modules
-      #desktop.homemodules.wm.modules = {
-      #  waybar = mkIf cfg.enableWaybar {
-      #    enable = true;
-      #    colorScheme = colorScheme;
-      #  };
-
-      #  wofi = mkIf cfg.enableRofi {
-      #    enable = true;
-      #    colorScheme = colorScheme;
-      #    terminal = cfg.defaultTerminal;
-      #  };
-
-      #  fastfetch = mkIf cfg.enableFastfetch {
-      #    enable = true;
-      #    colorScheme = colorScheme;
-      #};
-      #};
-
-      # Hyprland-specific packages
       home.packages = with pkgs; [
         wofi
         swaylock
         wl-clipboard
         hyprpaper
       ];
-    })
-
-    # Common configuration (applies to both WMs)
-    (mkIf (isBspwm || isHyprland) {
-      # Wallpaper service - different implementation for each WM
-      systemd.user.services.wallpaper = {
-        Unit = {
-          Description = "Set wallpaper";
-          After = ["graphical-session-pre.target"];
-          PartOf = ["graphical-session.target"];
-        };
-        Install.WantedBy = ["graphical-session.target"];
-        Service = {
-          ExecStart =
-            if isBspwm
-            then "${pkgs.feh}/bin/feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}"
-            else "${pkgs.hyprpaper}/bin/hyprpaper";
-          Type = "oneshot";
-        };
-      };
     })
   ];
 }
