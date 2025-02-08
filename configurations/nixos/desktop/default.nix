@@ -22,10 +22,8 @@ in {
   programs.modules.languages.languages.enable = true;
   programs.zsh.enable = true;
 
-  desktop.modules.wm.bspwm = {
+  desktop.modules.wm.hyprland = {
     enable = true;
-    isVirtualMachine = false;
-    videoDrivers = ["nvidia"];
   };
 
   programs.modules.notes.obsidian.enable = true;

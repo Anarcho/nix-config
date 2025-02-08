@@ -18,6 +18,7 @@ in {
     programs.nixvim = {
       enable = true;
       colorschemes.gruvbox.enable = true;
+      clipboard.register = "unnamedplus";
 
       globals = {
         localleader = " ";

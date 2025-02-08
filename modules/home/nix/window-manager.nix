@@ -20,6 +20,10 @@ with lib; let
     ws5 = "5";
   };
 
+  # Detect active window manager
+  isBspwm = osConfig.services.xserver.windowManager.bspwm.enable or false;
+  isHyprland = osConfig.programs.hyprland.enable or false;
+
   # Color scheme configuration
   colorScheme = inputs.nix-colors.colorSchemes.${cfg.colorScheme};
   colors = {
@@ -54,7 +58,6 @@ in {
 
     defaultBrowser = mkOption {
       type = validatePackage "browser" "Browser";
-
       default = "firefox";
       description = "Default browser to use with window manager";
     };
@@ -64,16 +67,19 @@ in {
       description = "Wallpaper image filename";
     };
 
+    # BSPWM-specific options
+
     enablePolybar = mkOption {
       type = types.bool;
       default = false;
-      description = "Enable polybar";
+
+      description = "Enable polybar (BSPWM only)";
     };
 
     enablePicom = mkOption {
       type = types.bool;
       default = false;
-      description = "Enable Picom";
+      description = "Enable Picom (BSPWM only)";
     };
 
     enableRofi = mkOption {
@@ -81,6 +87,7 @@ in {
       default = false;
       description = "Enable Rofi";
     };
+
     enableFastfetch = mkOption {
       type = types.bool;
       default = false;
@@ -89,133 +96,237 @@ in {
 
     colorScheme = mkOption {
       type = types.str;
+
       default = "gruvbox-dark-medium";
       description = "Color scheme used for window manager";
     };
+
+    # Hyprland-specific options
+    enableWaybar = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable Waybar (Hyprland only)";
+    };
+
+    enableSwaylock = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable Swaylock (Hyprland only)";
+    };
   };
 
-  config = mkIf (osConfig.services.xserver.windowManager.bspwm.enable or false) {
-    assertions = [
-      {
-        assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
-        message = "Terminal '${cfg.defaultTerminal}' not found in installed packages.";
-      }
-      {
-        assertion = any (p: p.pname or p.name == cfg.defaultBrowser) config.home.packages;
-        message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
-      }
-    ];
+  config = mkMerge [
+    # BSPWM Configuration
 
-    # BSPWM configuration
-    xsession.windowManager.bspwm = {
-      enable = true;
-      extraConfig = ''
-        sleep 1
+    (mkIf isBspwm {
+      assertions = [
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
+          message = "Terminal '${cfg.defaultTerminal}' not found in installed packages.";
+        }
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultBrowser) config.home.packages;
+          message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
+        }
+      ];
 
-        systemctl --user restart polybar
-
-        sleep 2
-
-        # Workspace setup
-        bspc monitor -d ${concatStringsSep " " (attrValues workspaces)}
-
-        # Window appearance
-        bspc config top_padding         35
-        bspc config bottom_padding      35
-
-        bspc config border_width        1
-        bspc config window_gap          8
-        bspc config split_ratio         0.52
-
-        # Behavior
-        bspc config focus_follows_pointer true
-
-        # Colors
-        bspc config normal_border_color "${colors.foreground}"
-        bspc config active_border_color "${colors.secondary}"
-        bspc config focused_border_color "${colors.primary}"
-      '';
-    };
-
-    # Keybinding configuration
-    services.sxhkd = {
-      enable = true;
-      keybindings = let
-        terminal = "${pkgs.${cfg.defaultTerminal}}/bin/${cfg.defaultTerminal}";
-        browser = "${pkgs.${cfg.defaultBrowser}}/bin/${cfg.defaultBrowser}";
-      in {
-        # Basic operations
-        "super + Return" = terminal;
-        "super + f" = browser;
-        "super + d" = "${pkgs.rofi}/bin/rofi -show drun";
-        "super + q" = "bspc node -c";
-        "super + l" = "${pkgs.i3lock}/bin/i3lock";
-        "super + p" = "${pkgs.polybar}/bin/polybar-msg cmd restart & ${pkgs.bspwm}/bin/bspc wm -r";
-
-        # WM control
-        "super + alt + {q,r}" = "bspc {quit,wm -r}";
-
-        # Window management
-        "super + {h,j,k,l}" = "bspc node -f {west,south,north,east}";
-        "super + ctrl + {h,j,k,l}" = "bspc node -p {west,south,north,east}";
-        "super + space" = "bspc node -t '~floating'";
-
-        # Workspace management
-        "super + 1" = "bspc desktop -f '${workspaces.ws1}'";
-        "super + 2" = "bspc desktop -f '${workspaces.ws2}'";
-        "super + 3" = "bspc desktop -f '${workspaces.ws3}'";
-        "super + 4" = "bspc desktop -f '${workspaces.ws4}'";
-        "super + 5" = "bspc desktop -f '${workspaces.ws5}'";
-
-        "super + shift + 1" = "bspc node -d '${workspaces.ws1}'";
-        "super + shift + 2" = "bspc node -d '${workspaces.ws2}'";
-        "super + shift + 3" = "bspc node -d '${workspaces.ws3}'";
-        "super + shift + 4" = "bspc node -d '${workspaces.ws4}'";
-        "super + shift + 5" = "bspc node -d '${workspaces.ws5}'";
-      };
-    };
-
-    # Wallpaper service
-    systemd.user.services.wallpaper = {
-      Unit = {
-        Description = "Set wallpaper";
-        After = ["graphical-session-pre.target"];
-        PartOf = ["graphical-session.target"];
-      };
-      Install.WantedBy = ["graphical-session.target"];
-      Service = {
-        ExecStart = "${pkgs.feh}/bin/feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}";
-        Type = "oneshot";
-      };
-    };
-
-    # Module configurations
-    desktop.homemodules.wm.modules = {
-      polybar = mkIf cfg.enablePolybar {
+      xsession.windowManager.bspwm = {
         enable = true;
-        colorScheme = colorScheme;
-      };
-      picom = mkIf cfg.enablePicom {
-        enable = true;
-      };
-      rofi = mkIf cfg.enableRofi {
-        enable = true;
-        colorScheme = colorScheme;
-        terminal = cfg.defaultTerminal;
-      };
-      fastfetch = mkIf cfg.enableFastfetch {
-        enable = true;
-        colorScheme = colorScheme;
-      };
-    };
+        extraConfig = ''
+          sleep 1
 
-    # Required packages
-    home.packages = with pkgs; [
-      feh
-      i3lock
-      sxhkd
-      xdo
-      wmname
-    ];
-  };
+          systemctl --user restart polybar
+
+          sleep 2
+
+          # Workspace setup
+          bspc monitor -d ${concatStringsSep " " (attrValues workspaces)}
+
+          # Window appearance
+          bspc config top_padding         35
+          bspc config bottom_padding      35
+
+          bspc config border_width        1
+          bspc config window_gap          8
+          bspc config split_ratio         0.52
+
+          # Behavior
+          bspc config focus_follows_pointer true
+
+          # Colors
+          bspc config normal_border_color "${colors.foreground}"
+          bspc config active_border_color "${colors.secondary}"
+          bspc config focused_border_color "${colors.primary}"
+        '';
+      };
+
+      services.sxhkd = {
+        enable = true;
+        keybindings = let
+          terminal = "${pkgs.${cfg.defaultTerminal}}/bin/${cfg.defaultTerminal}";
+          browser = "${pkgs.${cfg.defaultBrowser}}/bin/${cfg.defaultBrowser}";
+        in {
+          # Basic operations
+          "super + Return" = terminal;
+          "super + f" = browser;
+          "super + d" = "${pkgs.rofi}/bin/rofi -show drun";
+          "super + q" = "bspc node -c";
+          "super + l" = "${pkgs.i3lock}/bin/i3lock";
+          "super + p" = "${pkgs.polybar}/bin/polybar-msg cmd restart & ${pkgs.bspwm}/bin/bspc wm -r";
+
+          # WM control
+          "super + alt + {q,r}" = "bspc {quit,wm -r}";
+
+          # Window management
+          "super + {h,j,k,l}" = "bspc node -f {west,south,north,east}";
+          "super + ctrl + {h,j,k,l}" = "bspc node -p {west,south,north,east}";
+          "super + space" = "bspc node -t '~floating'";
+
+          # Workspace management
+          "super + {1-5}" = "bspc desktop -f '{1-5}'";
+          "super + shift + {1-5}" = "bspc node -d '{1-5}'";
+        };
+      };
+
+      # BSPWM-specific modules
+      desktop.homemodules.wm.modules = {
+        polybar = mkIf cfg.enablePolybar {
+          enable = true;
+          colorScheme = colorScheme;
+        };
+        picom = mkIf cfg.enablePicom {
+          enable = true;
+        };
+        rofi = mkIf cfg.enableRofi {
+          enable = true;
+          colorScheme = colorScheme;
+          terminal = cfg.defaultTerminal;
+        };
+        fastfetch = mkIf cfg.enableFastfetch {
+          enable = true;
+          colorScheme = colorScheme;
+        };
+      };
+
+      # BSPWM-specific packages
+      home.packages = with pkgs; [
+        feh
+        i3lock
+        sxhkd
+        xdo
+        wmname
+      ];
+    })
+
+    # Hyprland Configuration
+    (mkIf isHyprland {
+      assertions = [
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultTerminal) config.home.packages;
+          message = "Terminal '${cfg.defaultTerminal}' not found in installed packages.";
+        }
+        {
+          assertion = any (p: p.pname or p.name == cfg.defaultBrowser) config.home.packages;
+          message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
+        }
+      ];
+
+      # add option later
+      #$menu = ${pkgs.wofi}/bin/wofi --show drun
+      wayland.windowManager.hyprland = {
+        enable = true;
+        extraConfig = ''
+          # Monitor configuration
+          monitor=,preferred,auto,1
+
+          # Set variables
+          $terminal = ${pkgs.${cfg.defaultTerminal}}/bin/${cfg.defaultTerminal}
+          $browser = ${pkgs.${cfg.defaultBrowser}}/bin/${cfg.defaultBrowser}
+
+          # Keybinds
+          bind = SUPER, Return, exec, $terminal
+          bind = SUPER, F, exec, $browser
+          bind = SUPER, D, exec, $menu
+          bind = SUPER, Q, killactive,
+          bind = SUPER, L, exec, ${pkgs.swaylock}/bin/swaylock
+          bind = SUPER ALT, Q, exit,
+
+          # Window management
+          bind = SUPER, H, movefocus, l
+          bind = SUPER, L, movefocus, r
+          bind = SUPER, K, movefocus, u
+          bind = SUPER, J, movefocus, d
+
+          # Workspace management
+          bind = SUPER, 1, workspace, 1
+          bind = SUPER, 2, workspace, 2
+          bind = SUPER, 3, workspace, 3
+          bind = SUPER, 4, workspace, 4
+          bind = SUPER, 5, workspace, 5
+
+          bind = SUPER SHIFT, 1, movetoworkspace, 1
+          bind = SUPER SHIFT, 2, movetoworkspace, 2
+          bind = SUPER SHIFT, 3, movetoworkspace, 3
+          bind = SUPER SHIFT, 4, movetoworkspace, 4
+          bind = SUPER SHIFT, 5, movetoworkspace, 5
+
+          # Window rules
+          windowrule = float, ^(pavucontrol)$
+
+          # Colors
+          general {
+            col.active_border = ${colors.primary}
+            col.inactive_border = ${colors.foreground}
+          }
+        '';
+      };
+
+      # Hyprland-specific modules
+      #desktop.homemodules.wm.modules = {
+      #  waybar = mkIf cfg.enableWaybar {
+      #    enable = true;
+      #    colorScheme = colorScheme;
+      #  };
+
+      #  wofi = mkIf cfg.enableRofi {
+      #    enable = true;
+      #    colorScheme = colorScheme;
+      #    terminal = cfg.defaultTerminal;
+      #  };
+
+      #  fastfetch = mkIf cfg.enableFastfetch {
+      #    enable = true;
+      #    colorScheme = colorScheme;
+      #};
+      #};
+
+      # Hyprland-specific packages
+      home.packages = with pkgs; [
+        wofi
+        swaylock
+        wl-clipboard
+        hyprpaper
+      ];
+    })
+
+    # Common configuration (applies to both WMs)
+    (mkIf (isBspwm || isHyprland) {
+      # Wallpaper service - different implementation for each WM
+      systemd.user.services.wallpaper = {
+        Unit = {
+          Description = "Set wallpaper";
+          After = ["graphical-session-pre.target"];
+          PartOf = ["graphical-session.target"];
+        };
+        Install.WantedBy = ["graphical-session.target"];
+        Service = {
+          ExecStart =
+            if isBspwm
+            then "${pkgs.feh}/bin/feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}"
+            else "${pkgs.hyprpaper}/bin/hyprpaper";
+          Type = "oneshot";
+        };
+      };
+    })
+  ];
 }

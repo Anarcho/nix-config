@@ -19,9 +19,13 @@ in {
     defaultTerminal = "ghostty";
     wallpaperImage = "gruv-forest.png";
     defaultBrowser = "firefox";
-    enablePolybar = true;
-    enablePicom = true;
-    enableRofi = true;
+    # Bspwm enable options
+    enablePolybar = false;
+    enablePicom = false;
+    enableRofi = false;
+    #Hyprland enable options
+    enableWaybar = true;
+    enableSwaylock = true;
     enableFastfetch = true;
     colorScheme = "gruvbox-dark-medium";
   };
