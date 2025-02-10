@@ -12,6 +12,7 @@ in {
     ./rofi.nix
     ./fastfetch.nix
     ./hyprpaper.nix
+    ./waybar.nix
   ];
 
   # Only define polybar service if we're using BSPWM

@@ -59,7 +59,7 @@
     isNormalUser = true;
     initialPassword = "pass";
     shell = pkgs.zsh;
-    extraGroups = ["wheel" "networkmanager"];
+    extraGroups = ["wheel" "networkmanager" "audio"];
     home = "/home/anarcho";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFuUz6JTu3ZB93YDEtck7IxaZ6lKpAslwMls9IpTbpMN anarcho@nix"
@@ -80,6 +80,12 @@
 
   security = {
     sudo.wheelNeedsPassword = false;
+  };
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
   };
 
   system.stateVersion = "24.05";

@@ -229,10 +229,18 @@ in {
           # Monitor configuration
           monitor=,preferred,auto,1
 
+          # Workspaces
+
           # Set variables
           $terminal = ${pkgs.${cfg.defaultTerminal}}/bin/${cfg.defaultTerminal}
           $browser = ${pkgs.${cfg.defaultBrowser}}/bin/${cfg.defaultBrowser}
           $menu = ${pkgs.wofi}/bin/wofi --show drun
+
+          workspace = 1, persistent:true,monitor:HDMI-A-1,default:true
+          workspace = 2, persistent:true,monitor:HDMI-A-1
+          workspace = 3, persistent:true,monitor:HDMI-A-1
+          workspace = 4, persistent:true,monitor:HDMI-A-1
+          workspace = 5, persistent:true,monitor:HDMI-A-1
 
           # Keybinds
           bind = SUPER, Return, exec, $terminal
@@ -264,21 +272,17 @@ in {
           # Window rules
           windowrule = float, ^(pavucontrol)$
 
-          # Colors
-          general {
-            col.active_border = ${colors.primary}
-            col.inactive_border = ${colors.foreground}
-          }
-
-          exec-once = hyprpaper
+          exec-once = hyprctl hyprpaper
         '';
       };
       desktop.homemodules.wm.modules.hyprpaper = {
         enable = true;
         monitor = "eDP-1";
-        wallPaper = "/home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}";
+        wallPaper = "~/.config/assets/wallpapers/${cfg.wallpaperImage}";
       };
-
+      desktop.homemodules.wm.modules.waybar = {
+        enable = false;
+      };
       home.packages = with pkgs; [
         wofi
         swaylock

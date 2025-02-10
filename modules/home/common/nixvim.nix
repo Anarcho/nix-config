@@ -97,6 +97,7 @@ in {
         // (import ./vim/plugin-config/lualine)
         // (import ./vim/plugin-config/alpha)
         // (import ./vim/plugin-config/oil)
+        // (import ./vim/plugin-config/colorizer)
         // (import ./vim/plugin-config/neotest)
         // (import ./vim/plugin-config/mini)
         // (import ./vim/plugin-config/notify)

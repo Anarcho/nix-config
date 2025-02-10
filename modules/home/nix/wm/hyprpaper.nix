@@ -24,7 +24,7 @@ in
         enable = true;
         settings = {
           reload = [cfg.wallPaper];
-          wallpapers = [
+          wallpaper = [
             ",${cfg.wallPaper}"
           ];
         };
