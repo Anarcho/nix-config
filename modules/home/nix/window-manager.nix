@@ -227,11 +227,13 @@ in {
       wayland.windowManager.hyprland = {
         enable = true;
         systemd.enable = true;
+        settings.exec-once = [
+          "~/.config/assets/scripts/auto_start.sh"
+        ];
         extraConfig = ''
           # Monitor configuration
           monitor=,preferred,auto,1
 
-          exec-once = ${pkgs.waybar}/bin/waybar
 
           # Workspaces
 
@@ -289,6 +291,7 @@ in {
       };
       home.packages = with pkgs; [
         wofi
+        waybar
         swaylock
         wl-clipboard
         hyprpaper

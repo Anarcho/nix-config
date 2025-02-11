@@ -20,8 +20,6 @@
 
     playerctl
 
-    waybar
-
     tmux-sessionizer
   ];
 

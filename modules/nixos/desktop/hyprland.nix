@@ -51,6 +51,9 @@ in {
 
     environment.systemPackages = with pkgs; [
       kitty
+      wireplumber
+      pipewire
+      xdg-desktop-portal
     ];
 
     environment.sessionVariables = {
