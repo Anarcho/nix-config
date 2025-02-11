@@ -78,14 +78,30 @@
     };
   };
 
-  security = {
-    sudo.wheelNeedsPassword = false;
+  hardware = {
+    pulseaudio = {
+      enable = false;
+      extraModules = [pkgs.pulseaudio-modules-bt];
+    };
+    bluetooth = {enable = true;};
   };
 
+  # Enable sound
+  sound = {
+    enable = false;
+    mediaKeys.enable = true;
+  };
+
+  # Enable audio through pipewire
   services.pipewire = {
     enable = true;
     alsa.enable = true;
+    alsa.support32Bit = true;
     pulse.enable = true;
+  };
+
+  security = {
+    sudo.wheelNeedsPassword = false;
   };
 
   system.stateVersion = "24.05";
