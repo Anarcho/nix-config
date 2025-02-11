@@ -14,6 +14,7 @@ with lib; let
   # Detect active window manager
   isBspwm = osConfig.services.xserver.windowManager.bspwm.enable or false;
   isHyprland = osConfig.programs.hyprland.enable or false;
+  homeDir = config.home.homeDirectory;
 
   # Color scheme configuration
   colorScheme = inputs.nix-colors.colorSchemes.${cfg.colorScheme};
@@ -225,9 +226,12 @@ in {
     (mkIf isHyprland {
       wayland.windowManager.hyprland = {
         enable = true;
+        systemd.enable = true;
         extraConfig = ''
           # Monitor configuration
           monitor=,preferred,auto,1
+
+          exec-once = ${pkgs.waybar}/bin/waybar
 
           # Workspaces
 
@@ -281,7 +285,7 @@ in {
         wallPaper = "~/.config/assets/wallpapers/${cfg.wallpaperImage}";
       };
       desktop.homemodules.wm.modules.waybar = {
-        enable = false;
+        enable = true;
       };
       home.packages = with pkgs; [
         wofi

@@ -24,7 +24,6 @@
     users.anarcho = {
       directories = [
         "Repos"
-        ".config"
         ".ssh"
         ".cache"
         ".local/share"

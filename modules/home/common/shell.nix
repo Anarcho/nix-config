@@ -22,6 +22,7 @@
       '';
       shellAliases = {
         rs = "sudo nixos-rebuild switch --flake .#wsl";
+        dr = "sudo nixos-rebuild switch --flake .#desktop";
         jr = "just vm-rebuild";
         jc = "nix flake check";
         zigdev = "nix develop anarcho#zig -c $SHELL";

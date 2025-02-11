@@ -78,18 +78,11 @@
     };
   };
 
-  hardware = {
+  services = {
     pulseaudio = {
       enable = false;
       extraModules = [pkgs.pulseaudio-modules-bt];
     };
-    bluetooth = {enable = true;};
-  };
-
-  # Enable sound
-  sound = {
-    enable = false;
-    mediaKeys.enable = true;
   };
 
   # Enable audio through pipewire
@@ -102,6 +95,8 @@
 
   security = {
     sudo.wheelNeedsPassword = false;
+    rtkit.enable = true;
+    polkit.enable = true;
   };
 
   system.stateVersion = "24.05";

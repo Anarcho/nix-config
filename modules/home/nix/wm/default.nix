@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  osConfig,
   ...
 }: let
   cfg = config.desktop.homemodules.wm;
@@ -16,9 +17,11 @@ in {
   ];
 
   # Only define polybar service if we're using BSPWM
-  config = lib.mkIf isBspwm {
-    systemd.user.services.polybar = {
-      Install.WantedBy = ["graphical-session.target"];
-    };
-  };
+  config = lib.mkMerge [
+    (lib.mkIf isBspwm {
+      systemd.user.services.polybar = {
+        Install.WantedBy = ["graphical-session.target"];
+      };
+    })
+  ];
 }
