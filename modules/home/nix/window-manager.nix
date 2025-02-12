@@ -24,6 +24,8 @@ with lib; let
     primary = "#${colorScheme.palette.base0A}";
     secondary = "#${colorScheme.palette.base09}";
   };
+  monitor = "HDMI-A-1";
+  wallPaper = "~/.config/assets/wallpapers/${cfg.wallpaperImage}";
 
   # Helper function to validate package existence
   validatePackage = name: type:
@@ -117,23 +119,6 @@ in {
           message = "Browser '${cfg.defaultBrowser}' not found in installed packages.";
         }
       ];
-
-      # Common wallpaper service
-      systemd.user.services.wallpaper = {
-        Unit = {
-          Description = "Set wallpaper";
-          After = ["graphical-session-pre.target"];
-          PartOf = ["graphical-session.target"];
-        };
-        Install.WantedBy = ["graphical-session.target"];
-        Service = {
-          ExecStart =
-            if isBspwm
-            then "${pkgs.feh}/bin/feh --bg-fill /home/anarcho/.config/assets/wallpapers/${cfg.wallpaperImage}"
-            else "${pkgs.hyprpaper}/bin/hyprpaper";
-          Type = "oneshot";
-        };
-      };
     })
 
     # BSPWM-specific configuration
@@ -226,25 +211,71 @@ in {
     (mkIf isHyprland {
       wayland.windowManager.hyprland = {
         enable = true;
-        systemd.enable = true;
-        settings.exec-once = [
-          "~/.config/assets/scripts/auto_start.sh"
-        ];
+        settings = {
+          decoration = {
+            rounding = 4;
+            blur = {
+              enabled = "yes";
+              size = 2;
+              passes = 3;
+              special = "no";
+            };
+            dim_special = "0.0";
+          };
+          animations = {
+            enabled = "true";
+            bezier = [
+              "overshot, 0.05, 0.9, 0.1, 1.05"
+              "smooth, 0.5, 0, 0.99, 0.99"
+              "snapback, 0.54, 0.42, 0.01, 1.34"
+              "curve, 0.27, 0.7, 0.03, 0.99"
+            ];
+            animation = [
+              "windows, 1, 5, overshot, slide"
+              "windowsOut, 1, 5, snapback, slide"
+              "windowsIn, 1, 5, snapback, slide"
+              "windowsMove, 1, 5, snapback, slide"
+              "border, 1, 5, default"
+              "fade, 1, 5, default"
+              "fadeDim, 1, 5, default"
+              "workspaces, 1, 6, curve"
+            ];
+          };
+          exec-once = [
+            "${cfg.defaultTerminal}"
+          ];
+        };
         extraConfig = ''
           # Monitor configuration
           monitor=,preferred,auto,1
 
-
-          # Workspaces
-
           # Set variables
-          $terminal = ${pkgs.${cfg.defaultTerminal}}/bin/${cfg.defaultTerminal}
-          $browser = ${pkgs.${cfg.defaultBrowser}}/bin/${cfg.defaultBrowser}
-          $menu = ${pkgs.wofi}/bin/wofi --show drun
+          $terminal = ghostty
+          $browser = firefox
+          $menu = wofi
 
+
+          # Workspace 2
+          windowrule=float,${cfg.defaultBrowser},workspace=2
+
+          # Workspace 3
+          workspace=3
+
+
+          # Zen setup
           workspace = 1, persistent:true,monitor:HDMI-A-1,default:true
+          windowrule=center,${cfg.defaultTerminal},workspace=1
+          windowrulev2=float,class:^(${cfg.defaultBrowser}$),workspace=1
+          windowrulev2=size 50% 100%,class:^(${cfg.defaultBrowser}$),workspace=1
+
+          # Browser
           workspace = 2, persistent:true,monitor:HDMI-A-1
+          windowrule=float,${cfg.defaultBrowser},workspace=2
+
+          # Spotify
           workspace = 3, persistent:true,monitor:HDMI-A-1
+          windowrule=float,^(Spotify)$,workspace=3
+
           workspace = 4, persistent:true,monitor:HDMI-A-1
           workspace = 5, persistent:true,monitor:HDMI-A-1
 
@@ -253,7 +284,7 @@ in {
           bind = SUPER, F, exec, $browser
           bind = SUPER, D, exec, $menu
           bind = SUPER, Q, killactive,
-          bind = SUPER, L, exec, ${pkgs.swaylock}/bin/swaylock
+          bind = SUPER, L, exec, swaylock
           bind = SUPER ALT, Q, exit,
 
           # Window management
@@ -277,24 +308,30 @@ in {
 
           # Window rules
           windowrule = float, ^(pavucontrol)$
-
-          exec-once = hyprctl hyprpaper
         '';
-      };
-      desktop.homemodules.wm.modules.hyprpaper = {
-        enable = true;
-        monitor = "eDP-1";
-        wallPaper = "~/.config/assets/wallpapers/${cfg.wallpaperImage}";
       };
       desktop.homemodules.wm.modules.waybar = {
         enable = true;
+      };
+
+      services.hyprpaper = {
+        enable = true;
+        settings = {
+          splash = "false";
+          ipc = "on";
+          preload = [
+            "~/.config/assets/wallpapers/anime-city.jpg"
+          ];
+          wallpaper = [
+            "HDMI-A-1,~/.config/assets/wallpapers/anime-city.jpg"
+          ];
+        };
       };
       home.packages = with pkgs; [
         wofi
         waybar
         swaylock
         wl-clipboard
-        hyprpaper
       ];
     })
   ];

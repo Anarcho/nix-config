@@ -27,6 +27,7 @@
 
     # NVF
     #nvf.url = "github:notashelf/nvf";
+    hyprland.url = "github:hyprwm/Hyprland";
 
     #Neovim
     nixvim.url = "github:nix-community/nixvim";

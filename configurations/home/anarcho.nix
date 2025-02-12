@@ -17,7 +17,7 @@ in {
 
   desktop.homemodules.wm = {
     defaultTerminal = "ghostty";
-    wallpaperImage = "gruv-forest.png";
+    wallpaperImage = "anime-city.jpg";
     defaultBrowser = "firefox";
     # Bspwm enable options
     enablePolybar = false;
@@ -29,33 +29,42 @@ in {
     enableFastfetch = true;
     colorScheme = "gruvbox-dark-medium";
   };
-  xdg.userDirs.createDirectories = true;
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-hyprland
-      xdg-desktop-portal-wlr
-    ];
-  };
 
   common.modules.editor.nixvim.enable = true;
   home.username = "anarcho";
   home.homeDirectory = "/home/anarcho";
+  systemd.user.startServices = "sd-switch";
   home.file = {
     ".config/assets" = {
       source = ../../assets;
       recursive = true;
     };
-
     ".config/assets/scripts/auto_start.sh" = {
       executable = true;
       text = ''
         #!/usr/bin/env bash
-        killall waybar
-        pkill waybar
-        sleep 0.1
-        ${pkgs.waybar}/bin/waybar
+
+        # Wait for Hyprland to be fully started
+        sleep 2
+
+        # Kill any existing waybar instances
+        pkill waybar || true
+
+        # Start waybar in the background
+        ${pkgs.waybar}/bin/waybar &
+
+        # Wait for waybar to start
+        while ! pgrep -x waybar >/dev/null; do
+          sleep 0.1
+        done
+      '';
+    };
+    ".config/tms/config.toml" = {
+      executable = false;
+      text = ''
+        [[search_dirs]]
+        path = "/home/anarcho/Repos"
+        depth = 10
       '';
     };
   };

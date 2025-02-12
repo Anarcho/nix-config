@@ -12,7 +12,6 @@ in {
     ./picom.nix
     ./rofi.nix
     ./fastfetch.nix
-    ./hyprpaper.nix
     ./waybar.nix
   ];
 

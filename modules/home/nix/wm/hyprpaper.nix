@@ -10,7 +10,7 @@ in
     options.desktop.homemodules.wm.modules.hyprpaper = {
       enable = mkEnableOption "Enable hyprpaper";
       wallPaper = mkOption {
-        type = types.string;
+        type = types.str;
         description = "Path to wallpaper image";
       };
       monitor = mkOption {
@@ -21,11 +21,12 @@ in
     };
     config = mkIf cfg.enable {
       services.hyprpaper = {
-        enable = true;
+        enable = false;
         settings = {
-          reload = [cfg.wallPaper];
+          ipc = "on";
+          preload = [cfg.wallPaper];
           wallpaper = [
-            ",${cfg.wallPaper}"
+            "${cfg.monitor},${cfg.wallPaper}"
           ];
         };
       };

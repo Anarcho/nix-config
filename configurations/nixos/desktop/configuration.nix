@@ -28,20 +28,21 @@
       options = ["defaults" "size=4G" "mode=755"];
     };
     "/boot" = {
-      device = "/dev/disk/by-uuid/EA2B-B20B";
+      device = "/dev/disk/by-uuid/3E44-D6DE";
       fsType = "vfat";
       options = ["defaults"];
       neededForBoot = true;
     };
 
     "/nix" = {
-      device = "/dev/root_vg/root";
+      device = "/dev/disk/by-uuid/795a58b9-a5fe-488c-b26e-36331f121162";
       fsType = "btrfs";
       options = ["subvol=nix" "compress=zstd" "noatime"];
+      neededForBoot = true;
     };
 
     "/persist" = {
-      device = "/dev/root_vg/root";
+      device = "/dev/disk/by-uuid/795a58b9-a5fe-488c-b26e-36331f121162";
       fsType = "btrfs";
       options = ["subvol=persist" "compress=zstd" "noatime"];
       neededForBoot = true;

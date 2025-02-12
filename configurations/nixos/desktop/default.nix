@@ -16,6 +16,12 @@ in {
   ];
 
   nixpkgs.config.allowUnfree = true;
+  programs.dconf.enable = true;
+
+  nix.settings = {
+    substituters = ["https://hyprland.cachix.org"];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+  };
 
   users.defaultUserShell = pkgs.zsh;
 
@@ -29,6 +35,10 @@ in {
   programs.modules.notes.obsidian.enable = true;
   programs.modules.music.spotify.enable = true;
   programs.modules.shell.shell.enable = true;
+
+  environment.systemPackages = [
+    pkgs.cachix
+  ];
 
   services.openssh = {
     enable = true;

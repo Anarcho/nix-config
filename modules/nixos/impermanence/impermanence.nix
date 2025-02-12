@@ -20,6 +20,7 @@
       "/var/lib/containers"
       "/var/lib/private"
       "/var/lib/NetworkManager"
+      "/var/lib/systemd/coredump"
     ];
     users.anarcho = {
       directories = [

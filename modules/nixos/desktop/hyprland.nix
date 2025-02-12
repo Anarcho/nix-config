@@ -2,38 +2,39 @@
   config,
   lib,
   pkgs,
+  flake,
   ...
 }:
 with lib; let
   cfg = config.desktop.modules.wm.hyprland;
+  inherit (flake) inputs;
 in {
   options.desktop.modules.wm.hyprland = {
     enable = mkEnableOption "Enable Hyprland";
   };
   config = mkIf cfg.enable {
+    nix.settings = {
+      substituters = ["https://hyprland.cachix.org"];
+      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+    };
     programs.hyprland = {
       enable = true;
-      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
       xwayland.enable = true;
-      withUWSM = true;
-    };
-
-    programs.uwsm = {
-      enable = true;
-      waylandCompositors = {
-        hyprland = {
-          prettyName = "Hyprland";
-          comment = "Hyprland compositor managed by UWSM";
-          binPath = "/run/current-system/sw/bin/Hyprland";
-        };
-      };
+      withUWSM = false;
     };
 
     services = {
       xserver.videoDrivers = ["nvidia"];
       displayManager = {
-        sddm.enable = true;
-        sddm.wayland.enable = true;
+        sddm = {
+          enable = true;
+          wayland.enable = true;
+          package = pkgs.kdePackages.sddm;
+          theme = "sddm-astronaut-theme";
+          extraPackages = with pkgs; [sddm-astronaut];
+        };
       };
     };
 
@@ -46,19 +47,26 @@ in {
 
     xdg.portal = {
       enable = true;
-      extraPortals = [pkgs.xdg-desktop-portal-hyprland];
+      xdgOpenUsePortal = true;
+      config.common.default = "*";
+      config.hyprland.default = ["hyprland"];
+    };
+
+    environment.sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      WLR_NO_HARDWARE_CURSORS = "1";
+      XDG_SESSION_TYPE = "wayland";
+      XDG_SESSION_DESKTOP = "Hyprland";
+      XDG_CURRENT_DESKTOP = "Hyprland";
     };
 
     environment.systemPackages = with pkgs; [
       kitty
       wireplumber
       pipewire
-      xdg-desktop-portal
+      hyprland-qtutils
+      hyprpaper
+      sddm-astronaut
     ];
-
-    environment.sessionVariables = {
-      WLR_NO_HARDWARE_CURSORS = "1";
-      NIXOS_OZONE_WL = "1";
-    };
   };
 }

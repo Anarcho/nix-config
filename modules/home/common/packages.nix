@@ -20,6 +20,7 @@
 
     playerctl
 
+    xdg-utils
     tmux-sessionizer
   ];
 

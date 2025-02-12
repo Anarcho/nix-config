@@ -15,8 +15,7 @@
     dark_aqua = "#689d6a";
     dark_orange = "#d65d0e";
 
-    # colors
-    red = "#fb3934";
+    # colors red = "#fb3934";
     green = "#b8bb26";
     yellow = "#fabd2f";
     blue = "#83a597";
