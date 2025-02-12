@@ -24,14 +24,6 @@ in {
 
   programs.zsh.enable = true;
 
-  desktop.modules.wm.bspwm = {
-    enable = true;
-    isVirtualMachine = true;
-    videoDrivers = ["virtualbox"];
-  };
-
-  programs.modules.notes.obsidian.enable = true;
-  programs.modules.music.spotify.enable = true;
   programs.modules.shell.shell.enable = true;
 
   # Enable home-manager for "anarcho" user
