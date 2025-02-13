@@ -19,6 +19,15 @@
   }
   {
     mode = "n";
+    key = "<leader>fg";
+    action = ":FzfLua live_grep<CR>";
+    options = {
+      desc = "Search in buffer";
+      silent = true;
+    };
+  }
+  {
+    mode = "n";
     key = "<leader>fr";
     action = ":FzfLua oldfiles cwd_only=true<CR>";
     options = {

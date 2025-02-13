@@ -11,12 +11,20 @@
 in {
   imports = [
     self.nixosModules.default
-    self.nixosModules.impermanence
     self.nixosModules.disko
     self.nixosModules.desktop
     self.nixosModules.programs
     ./configuration.nix
   ];
+
+  desktop.modules.services.disko = {
+    enable = true;
+    strategy = "vm";
+  };
+  desktop.modules.wm.sway = {
+    enable = true;
+    isVirtualMachine = true;
+  };
 
   nixpkgs.config.allowUnfree = true;
 
@@ -27,9 +35,8 @@ in {
   programs.modules.shell.shell.enable = true;
 
   # Enable home-manager for "anarcho" user
-  home-manager.users."anarcho" = {
-    imports = [(self + /configurations/home/anarcho.nix)];
+  home-manager.users."ak-test" = {
+    imports = [(self + /configurations/home/ak-test.nix)];
   };
-
   home-manager.backupFileExtension = "backup";
 }

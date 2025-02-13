@@ -19,32 +19,7 @@
     };
   };
 
-  fileSystems."/" = {
-    device = "none";
-    fsType = "tmpfs";
-    options = ["defaults" "size=25%" "mode=755"];
-  };
-
-  fileSystems."/persist" = {
-    device = "/dev/root_vg/root";
-    neededForBoot = true;
-    fsType = "btrfs";
-    options = ["subvol=persist"];
-  };
-
-  fileSystems."/nix" = {
-    device = "/dev/root_vg/root";
-    fsType = "btrfs";
-    options = ["subvol=nix"];
-  };
-  fileSystems."/home" = {
-    device = "none";
-    fsType = "tmpfs";
-    options = ["defaults" "size=25%" "mode=755"];
-    neededForBoot = true;
-  };
-
-  users.users.anarcho = {
+  users.users.ak-test = {
     isNormalUser = true;
     initialPassword = "pass";
     extraGroups = ["wheel" "networkmanager"];

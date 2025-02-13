@@ -251,7 +251,7 @@ in {
 
           # Set variables
           $terminal = ghostty
-          $browser = firefox
+          $browser = brave
           $menu = wofi
 
 

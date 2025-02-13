@@ -95,11 +95,37 @@
             {
               noremap = true;
               silent = true;
-
               nowait = true;
             }
           ];
           shortcut = "R";
+          position = "center";
+          cursor = 3;
+          width = 38;
+          align_shortcut = "right";
+          hl_shortcut = "Keyword";
+        };
+      }
+      {
+        type = "padding";
+        val = 2;
+      }
+      {
+        type = "button";
+        val = "󱎸 Find / Grep";
+        on_press.raw = "FzfLua live_grep";
+        opts = {
+          keymap = [
+            "n"
+            "g"
+            ":FzfLua live_grep<CR>"
+            {
+              noremap = true;
+              silent = true;
+              nowait = true;
+            }
+          ];
+          shortcut = "g";
           position = "center";
           cursor = 3;
           width = 38;
@@ -137,4 +163,3 @@
     ];
   };
 }
-

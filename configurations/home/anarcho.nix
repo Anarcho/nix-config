@@ -18,7 +18,7 @@ in {
   desktop.homemodules.wm = {
     defaultTerminal = "ghostty";
     wallpaperImage = "anime-city.jpg";
-    defaultBrowser = "firefox";
+    defaultBrowser = "brave";
     # Bspwm enable options
     enablePolybar = false;
     enablePicom = false;
