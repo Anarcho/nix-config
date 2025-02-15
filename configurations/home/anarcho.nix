@@ -22,7 +22,7 @@ in {
     # Bspwm enable options
     enablePolybar = false;
     enablePicom = false;
-    enableRofi = false;
+    enableRofi = true;
     #Hyprland enable options
     enableWaybar = true;
     enableSwaylock = true;
@@ -59,14 +59,12 @@ in {
         done
       '';
     };
-    ".config/tms/config.toml" = {
-      executable = false;
-      text = ''
-        [[search_dirs]]
-        path = "/home/anarcho/Repos"
-        depth = 10
-      '';
-    };
+  };
+  home.persistence."/persist/home/anarcho" = {
+    files = [
+      ".config/tms/config.toml"
+    ];
+    allowOther = true;
   };
 
   home.stateVersion = "24.11";

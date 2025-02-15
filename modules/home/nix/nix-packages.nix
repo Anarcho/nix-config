@@ -1,9 +1,8 @@
 {pkgs, ...}: {
   fonts.fontconfig.enable = true;
 
-  home.packages = with pkgs; [
-    brave
-  ];
+  #home.packages = with pkgs; [
+  #];
 
   programs = {
     bat.enable = true;
@@ -12,6 +11,10 @@
     btop.enable = true;
     tmate = {
       enable = true;
+    };
+    chromium = {
+      enable = true;
+      package = pkgs.brave;
     };
   };
 }

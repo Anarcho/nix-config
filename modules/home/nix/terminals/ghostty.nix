@@ -18,6 +18,7 @@ in
           window-decoration = false;
           window-padding-y = 4;
           window-padding-x = 4;
+          background-opacity = 0.8;
         };
         enableZshIntegration = true;
       };

@@ -91,6 +91,7 @@ in
               "hyprland/window"
             ];
             modules-right = [
+              "wireplumber"
               "cpu"
               "memory"
               "clock"
@@ -112,6 +113,14 @@ in
             };
             "memory" = {
               format = "{}% ";
+            };
+            "wireplumber" = {
+              format = "{volume}% {icon}";
+              format-muted = "";
+              on-click = "helvum";
+              max-volume = 150;
+              scroll-step = "0.2";
+              format-icons = ["" "" ""];
             };
           };
         };
@@ -246,6 +255,25 @@ in
             margin-bottom: 4px;
             padding-left: 14px;
             padding-right: 14px;
+          }
+
+          #wireplumber {
+            background-color: ${colors.orange};
+            color: ${colors.waybar-foreground};
+            font-family: JetBrainsMono, monospace;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            border-bottom: 8px solid ${colors.dark_orange};
+            margin-top: 4px;
+            margin-bottom: 4px;
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+
+          #wireplumber.muted {
+            color: #fff0f5;
           }
         '';
       };

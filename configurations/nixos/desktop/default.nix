@@ -35,7 +35,7 @@ in {
   programs.modules.notes.obsidian.enable = true;
   programs.modules.music.spotify.enable = true;
   programs.modules.shell.shell.enable = true;
-
+  programs.modules.desktop.gaming.steam.enable = true;
   environment.systemPackages = [
     pkgs.cachix
   ];

@@ -7,28 +7,19 @@
   cfg = config.desktop.homemodules.wm.modules.rofi;
 
   colors = {
-    base00 = "#${cfg.colorScheme.palette.base00}";
-    base01 = "#${cfg.colorScheme.palette.base01}";
-    base02 = "#${cfg.colorScheme.palette.base02}";
-    base03 = "#${cfg.colorScheme.palette.base03}";
-    base04 = "#${cfg.colorScheme.palette.base04}";
-    base05 = "#${cfg.colorScheme.palette.base05}";
-    base06 = "#${cfg.colorScheme.palette.base06}";
-    base07 = "#${cfg.colorScheme.palette.base07}";
-    base08 = "#${cfg.colorScheme.palette.base08}";
-    base09 = "#${cfg.colorScheme.palette.base09}";
-    base0A = "#${cfg.colorScheme.palette.base0A}";
-    base0B = "#${cfg.colorScheme.palette.base0B}";
-    base0C = "#${cfg.colorScheme.palette.base0C}";
-    base0D = "#${cfg.colorScheme.palette.base0D}";
-    base0E = "#${cfg.colorScheme.palette.base0E}";
-    base0F = "#${cfg.colorScheme.palette.base0F}";
+    background = "#1d2021";
+    background2 = "#1f2223";
+    background2-bottom = "#191c1d";
+    background3 = "#303031";
+    background3-bottom = "#272727";
+    button = "#689d6a";
+    button-bottom = "#518554";
+    foreground = "#ebdbb2";
   };
 in
   with lib; {
     options.desktop.homemodules.wm.modules.rofi = {
       enable = mkEnableOption "Enable polybar";
-
       colorScheme = mkOption {
         type = types.attrs;
         description = "Color scheme used for polybar";
@@ -47,6 +38,7 @@ in
         enable = true;
         cycle = true;
         location = "center";
+        font = "JetBrainsMono Nerd Font";
         pass = {};
         terminal = cfg.terminal;
         plugins = [
@@ -59,121 +51,152 @@ in
           inherit (config.lib.formats.rasi) mkLiteral;
         in {
           "*" = {
-            background-color = mkLiteral colors.base00;
-            foreground-color = mkLiteral colors.base07;
-            text-color = mkLiteral colors.base07;
-            border-color = mkLiteral colors.base04;
-          };
-
-          "#window" = {
-            transparency = "real";
-            background-color = mkLiteral colors.base00;
-            text-color = mkLiteral colors.base07;
-            border-color = mkLiteral colors.base04;
-            border = mkLiteral "4px";
-            border-radius = mkLiteral "4px";
-            width = mkLiteral "850px";
-            padding = mkLiteral "15px";
-          };
-
-          "#mainbox" = {
-            background-color = mkLiteral colors.base00;
-            border-color = mkLiteral colors.base04;
-            border = mkLiteral "0px";
-            border-radius = mkLiteral "0px";
-            children = map mkLiteral [
-              "inputbar"
-              "message"
-              "listview"
-            ];
-            spacing = mkLiteral "10px";
-            padding = mkLiteral "10px";
-          };
-
-          "#text-box-colon" = {
-            expand = false;
-            str = ":";
-            margin = mkLiteral "0px 0.3em 0em 0em";
-            text-color = mkLiteral colors.base07;
-          };
-
-          "#prompt" = {
-            enable = false;
-          };
-
-          "#entry" = {
-            placeholder-color = mkLiteral colors.base03;
-            expand = true;
-            horizontal-align = "0";
-            placeholder = "";
-            padding = mkLiteral "0px 0px 0px 5px";
-            blink = true;
-          };
-
-          "#inputbar" = {
-            children = map mkLiteral [
-              "prompt"
-              "entry"
-            ];
-            border = mkLiteral "1px";
-            border-radius = mkLiteral "4px";
-            padding = mkLiteral "6px";
-          };
-
-          "#listview" = {
-            background-color = mkLiteral colors.base00;
-            padding = mkLiteral "0px";
-            columns = 1;
-            lines = 12;
-            spacing = "5px";
-            cycle = true;
-            dynamic = true;
-            layout = "vertical";
-          };
-
-          "#elemant" = {
-            orientation = "vertical";
-            border-radius = mkLiteral "0px";
-            padding = mkLiteral "5px 0px 5px 5px";
-          };
-
-          "#element.selected" = {
-            border = mkLiteral "1px";
-            border-radius = mkLiteral "4px";
-            border-color = mkLiteral colors.base07;
-            background-color = mkLiteral colors.base05;
-            text-color = mkLiteral colors.base00;
+            bg-col = mkLiteral colors.background;
+            bg-col-transparent = mkLiteral "${colors.background}dd";
+            bg-col-element = mkLiteral "${colors.background}df";
+            bg-col-light = mkLiteral colors.button;
+            border-col = mkLiteral colors.button;
+            selected-col = mkLiteral colors.button;
+            tab = mkLiteral colors.button;
+            tab-selected = mkLiteral colors.background;
+            fg-col = mkLiteral colors.foreground;
+            fg-col2 = mkLiteral colors.background;
+            blank = mkLiteral colors.background2;
+            blank-underline = mkLiteral colors.background2-bottom;
+            button = mkLiteral colors.button;
+            button-underline = mkLiteral colors.button-bottom;
+            window = mkLiteral colors.background3;
+            window-underline = mkLiteral colors.background3-bottom;
+            width = mkLiteral "600";
           };
 
           "#element-text" = {
-            expand = true;
-            vertical-align = mkLiteral "0.5";
-            margin = mkLiteral "0px 2.5px 0px 2.5px";
+            background-color = mkLiteral "#00000000";
+            text-color = mkLiteral "inherit";
           };
 
           "#element-text.selected" = {
-            background-color = mkLiteral colors.base00;
+            background-color = mkLiteral "#00000000";
+            text-color = mkLiteral "inherit";
+          };
+
+          "#mode-switcher" = {
+            background-color = mkLiteral "#00000000";
+          };
+
+          "#window" = {
+            height = mkLiteral "400px";
+            width = mkLiteral "600px";
+            border-radius = mkLiteral "10px";
+            border = mkLiteral "0px 0px 8px 0px";
+            border-color = mkLiteral "@window-underline";
+            background-color = mkLiteral "@window";
+            padding = mkLiteral "4px 8px 4px 8px";
+            fullscreen = mkLiteral "false";
+          };
+
+          "#mainbox" = {
+            background-color = mkLiteral "#00000000";
+            padding = mkLiteral "2 2 2 2";
+          };
+
+          "#inputbar" = {
+            children = map mkLiteral ["prompt" "entry"];
+            background-color = mkLiteral "#00000000";
+            border-radius = mkLiteral "5px";
+            padding = mkLiteral "2px";
+            margin = mkLiteral "0px -5px -4px -5px";
+          };
+
+          "#prompt" = {
+            background-color = mkLiteral "@button";
+            padding = mkLiteral "12px";
+            text-color = mkLiteral "@bg-col";
+            border-radius = mkLiteral "5px";
+            margin = mkLiteral "8px 0px 0px 8px";
+            border = mkLiteral "0px 0px 8px 0px";
+            border-color = mkLiteral "@button-underline";
+          };
+
+          "#textbox-prompt-colon" = {
+            expand = false;
+            str = ":";
+          };
+
+          "#entry" = {
+            padding = mkLiteral "12px 13px -4px 11px";
+            margin = mkLiteral "8px 8px 0px 8px";
+            text-color = mkLiteral "@fg-col";
+            background-color = mkLiteral "@blank";
+            border-radius = mkLiteral "5px";
+            border = mkLiteral "0px 0px 8px 0px";
+            border-color = mkLiteral "@blank-underline";
+          };
+
+          "#listview" = {
+            border = mkLiteral "0px 0px 0px";
+            margin = mkLiteral "27px 5px -13px 5px";
+            background-color = mkLiteral "#00000000";
+            columns = mkLiteral "1";
+          };
+
+          "#element" = {
+            padding = mkLiteral "12px 12px 12px 12px";
+            background-color = mkLiteral "@blank";
+            text-color = mkLiteral "@fg-col";
+            margin = mkLiteral "0px 0px 8px 0px";
+            border-radius = mkLiteral "5px";
+            border = mkLiteral "0px 0px 8px 0px";
+            border-color = mkLiteral "@blank-underline";
           };
 
           "#element-icon" = {
-            size = mkLiteral "18px";
-            border = mkLiteral "0px";
-            padding = mkLiteral "2px 5px 2px 2px";
+            size = mkLiteral "25px";
+            background-color = mkLiteral "#00000000";
           };
 
-          "#element-icon.selected" = {
-            background-color = mkLiteral colors.base04;
-            text-color = mkLiteral colors.base00;
+          "#element.selected" = {
+            background-color = mkLiteral "@button";
+            text-color = mkLiteral "@fg-col2";
+            border-radius = mkLiteral "5px";
+            border = mkLiteral "0px 0px 8px 0px";
+            border-color = mkLiteral "@button-underline";
+          };
+
+          "#button" = {
+            padding = mkLiteral "12px";
+            margin = mkLiteral "10px 5px 10px 5px";
+            background-color = mkLiteral "@blank";
+            text-color = mkLiteral "@tab";
+            vertical-align = mkLiteral "0.5";
+            horizontal-align = mkLiteral "0.5";
+            border-radius = mkLiteral "5px";
+            border = mkLiteral "0px 0px 8px 0px";
+            border-color = mkLiteral "@blank-underline";
+          };
+
+          "#button.selected" = {
+            background-color = mkLiteral "@bg-col-light";
+            text-color = mkLiteral "@tab-selected";
+            border-radius = mkLiteral "5px";
+            border = mkLiteral "0px 0px 8px 0px";
+            border-color = mkLiteral "@button-underline";
           };
         };
-        xoffset = 0;
-        yoffset = -20;
 
         extraConfig = {
+          modi = "drun,run";
+          sort = true;
           show-icons = true;
           kb-cancel = "Escape,Super+space";
-          modi = "window,run,ssh";
-          sort = true;
+          lines = 5;
+          drun-display-format = "{icon} {name}";
+          disable-history = true;
+          hide-scrollbar = true;
+          sidebar-mode = true;
+          display-drun = " 󰀘  Apps ";
+          display-run = "   Command ";
+          display-window = "   Window ";
         };
       };
     };

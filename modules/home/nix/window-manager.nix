@@ -252,7 +252,7 @@ in {
           # Set variables
           $terminal = ghostty
           $browser = brave
-          $menu = wofi
+          $menu = rofi
 
 
           # Workspace 2
@@ -281,8 +281,8 @@ in {
 
           # Keybinds
           bind = SUPER, Return, exec, $terminal
-          bind = SUPER, F, exec, $browser
-          bind = SUPER, D, exec, $menu
+          bind = SUPER, F, exec, $browser --disable-gpu --no-first-run --no-default-browser-check --disable-sync --no-welcome-experience
+          bind = SUPER, D, exec, $menu -show drun
           bind = SUPER, Q, killactive,
           bind = SUPER, L, exec, swaylock
           bind = SUPER ALT, Q, exit,
@@ -310,8 +310,14 @@ in {
           windowrule = float, ^(pavucontrol)$
         '';
       };
+
       desktop.homemodules.wm.modules.waybar = {
         enable = true;
+      };
+      desktop.homemodules.wm.modules.rofi = {
+        enable = true;
+        colorScheme = colorScheme;
+        terminal = cfg.defaultTerminal;
       };
 
       services.hyprpaper = {
@@ -327,8 +333,8 @@ in {
           ];
         };
       };
+
       home.packages = with pkgs; [
-        wofi
         waybar
         swaylock
         wl-clipboard
