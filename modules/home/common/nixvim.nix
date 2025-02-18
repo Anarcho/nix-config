@@ -7,6 +7,12 @@
 }: let
   inherit (lib) mkIf mkEnableOption mkOption types;
   cfg = config.common.modules.editor.nixvim;
+  importLuaConfig = dir: let
+    files = builtins.attrNames (builtins.readDir dir);
+    contents = map (file: builtins.readFile "${dir}/${file}") files;
+    combined = builtins.concatStringsSep "\n" contents;
+  in
+    combined;
 in {
   imports = [
     flake.inputs.nixvim.homeManagerModules.nixvim
@@ -58,6 +64,15 @@ in {
         zls
       ];
 
+      extraPlugins = with pkgs.vimPlugins; [
+        plenary-nvim
+      ];
+
+      extraConfigLua = importLuaConfig ./vim/lua-config;
+      extraFiles =
+        {}
+        // (import ./vim/extra-files/default.nix);
+
       keymaps =
         []
         ++ import ./vim/keymaps/buffer
@@ -69,6 +84,7 @@ in {
         ++ import ./vim/keymaps/search
         ++ import ./vim/keymaps/sql
         ++ import ./vim/keymaps/terminal
+        ++ import ./vim/keymaps/taskrunner
         ++ import ./vim/keymaps/window;
 
       plugins =
@@ -89,6 +105,7 @@ in {
           ts-context-commentstring.enable = true;
           render-markdown.enable = true;
           friendly-snippets.enable = true;
+          lazydev.enable = true;
         }
         // (import ./vim/plugin-config/lsp) {inherit pkgs;}
         #// (import ./vim/plugin-config/blink-cmp)
