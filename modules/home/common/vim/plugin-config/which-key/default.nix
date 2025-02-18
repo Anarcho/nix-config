@@ -20,6 +20,14 @@
           __unkeyed-1 = "<leader>w";
           desc = "Window";
         }
+        {
+          __unkeyed-1 = "<leader>o";
+          desc = "Tasks";
+        }
+        {
+          __unkeyed-1 = "<leader>z";
+          desc = "Zig options";
+        }
       ];
     };
   };

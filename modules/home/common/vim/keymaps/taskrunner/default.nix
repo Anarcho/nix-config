@@ -1,7 +1,7 @@
 [
   {
     mode = "n";
-    key = "<leader>z1";
+    key = "<leader>zt";
     action = "<cmd>ZigTest<cr>";
     options = {
       desc = "Zig test";
@@ -10,19 +10,19 @@
   }
   {
     mode = "n";
-    key = "<leader>z2";
-    action = "<cmd>ZigLast<cr>";
+    key = "<leader>zb";
+    action = "<cmd>ZigBuild<cr>";
     options = {
-      desc = "Zig last";
+      desc = "Zig build commands";
       silent = true;
     };
   }
   {
     mode = "n";
-    key = "<leader>z4";
+    key = "<leader>oo";
     action = "<cmd>OverseerToggle<cr>";
     options = {
-      desc = "Zig tasks toggle";
+      desc = "Toggle overseer tasks";
       silent = true;
     };
   }
