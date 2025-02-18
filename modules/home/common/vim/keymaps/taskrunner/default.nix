@@ -19,6 +19,15 @@
   }
   {
     mode = "n";
+    key = "<leader>zr";
+    action = "<cmd>ZigRun<cr>";
+    options = {
+      desc = "Zig Run";
+      silent = true;
+    };
+  }
+  {
+    mode = "n";
     key = "<leader>oo";
     action = "<cmd>OverseerToggle<cr>";
     options = {
