@@ -1,51 +1,46 @@
 # Like GNU `make`, but `just` rustier.
 # https://just.systems/
-# run `just` from this directory to see available commands
 
-# Default command when 'just' is run without arguments
+# Default command shows available commands
 default:
-  @just --list
+    @just --list
 
-# Update nix flake
-[group('Main')]
+# Update all flake inputs
+[group('flake')]
 update:
-  nix flake update
+    nix flake update
 
-# Lint nix files
-[group('dev')]
-lint:
-  nix fmt
-
-# Check nix flake
-[group('dev')]
+# Check flake for errors
+[group('flake')]
 check:
-  nix flake check
+    nix flake check
 
-# Manually enter dev shell
-[group('dev')]
-dev:
-  nix develop
+# Build and activate WSL configuration
+[group('wsl')]
+wsl-switch:
+    sudo nixos-rebuild switch --flake '.#wsl'
 
-# Activate the configuration
-[group('Main')]
-run:
-  nix run
+# Test WSL configuration without activating
+[group('wsl')]
+wsl-test:
+    sudo nixos-rebuild test --flake '.#wsl'
 
-# Build and activate on remote VM
-[group('Main')]
-vm-rebuild:
-  nix run nixpkgs#nixos-rebuild -- switch --target-host nix --flake '.#vm' --build-host nix --use-remote-sudo
+# Just build WSL configuration
+[group('wsl')]
+wsl-build:
+    sudo nixos-rebuild build --flake '.#wsl'
 
-# Just build on remote VM without activating
-[group('Main')]
-vm-build:
-  nix run nixpkgs#nixos-rebuild -- build --target-host nix --flake '.#vm' --build-host nix --use-remote-sudo
+# Build and activate desktop configuration
+[group('desktop')]
+desktop-switch:
+    sudo nixos-rebuild switch --flake '.#desktop'
 
-# Copy configuration to remote VM and rebuild
-[group('Main')]
-vm-deploy: vm-rebuild
+# Test desktop configuration without activating
+[group('desktop')]
+desktop-test:
+    sudo nixos-rebuild test --flake '.#desktop'
 
-# Test the configuration on remote VM
-[group('Main')]
-vm-test:
-  nix run nixpkgs#nixos-rebuild -- test --target-host nix --flake '.#vm' --build-host nix --use-remote-sudo
+# Just build desktop configuration
+[group('desktop')]
+desktop-build:
+    sudo nixos-rebuild build --flake '.#desktop'

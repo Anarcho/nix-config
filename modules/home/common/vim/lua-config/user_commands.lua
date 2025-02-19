@@ -1,3 +1,98 @@
+vim.api.nvim_create_user_command("OverseerRunFzf", function()
+	local overseer = require("overseer")
+	local fzf = require("fzf-lua")
+
+	-- Create search options similar to overseer's internal logic
+	local search_opts = {
+		dir = vim.fn.getcwd(),
+		filetype = vim.bo.filetype,
+	}
+
+	-- Use overseer's template.list() function directly
+	overseer.template.list(search_opts, function(templates)
+		-- Filter out hidden templates
+		templates = vim.tbl_filter(function(tmpl)
+			return not tmpl.hide
+		end, templates)
+
+		if #templates == 0 then
+			vim.notify("No templates found", vim.log.levels.WARN)
+			return
+		end
+
+		-- Create display entries for templates
+		local template_entries = {}
+		for i, template in ipairs(templates) do
+			-- Format the template entry
+			local name = template.name
+
+			-- Add tags if present
+			local tags = ""
+			if template.tags and #template.tags > 0 then
+				tags = " [" .. table.concat(template.tags, ", ") .. "]"
+			end
+
+			-- Add description if present
+			local desc = ""
+			if template.desc then
+				desc = " - " .. template.desc
+			end
+
+			-- Show module/source info for built-in templates
+			local source = ""
+
+			if template.module then
+				source = string.format(" (%s)", template.module)
+			end
+
+			template_entries[i] = {
+				value = string.format("%d. %s%s%s%s", i, name, tags, desc, source),
+				template = template,
+			}
+		end
+
+		-- Show template selection menu
+
+		fzf.fzf_exec(
+			vim.tbl_map(function(entry)
+				return entry.value
+			end, template_entries),
+			{
+				prompt = "Select Template: ",
+				winopts = {
+					height = 0.4,
+					width = 0.5,
+					preview = { hidden = "hidden" },
+				},
+				actions = {
+					["default"] = function(selected)
+						if not selected or #selected == 0 then
+							return
+						end
+
+						-- Extract index from the selected entry
+
+						local index = tonumber(selected[1]:match("^(%d+)%."))
+						if not index or not template_entries[index] then
+							vim.notify("Invalid selection", vim.log.levels.WARN)
+							return
+						end
+
+						local template = template_entries[index].template
+
+						-- Run the selected template
+						overseer.run_template({
+
+							name = template.name,
+							autostart = true,
+						})
+					end,
+				},
+			}
+		)
+	end)
+end, {})
+
 -- Command to restart the last task
 vim.api.nvim_create_user_command("ZigLast", function()
 	local overseer = require("overseer")
@@ -6,6 +101,7 @@ vim.api.nvim_create_user_command("ZigLast", function()
 
 	if vim.tbl_isempty(tasks) then
 		vim.notify("No tasks found", vim.log.levels.WARN)
+
 		return
 	end
 
@@ -13,6 +109,7 @@ vim.api.nvim_create_user_command("ZigLast", function()
 	for _, task in ipairs(tasks) do
 		table.insert(task_list, {
 			display = string.format("%s (%s)", task.name, task.status),
+
 			task = task,
 		})
 	end
@@ -24,8 +121,10 @@ vim.api.nvim_create_user_command("ZigLast", function()
 		end, task_list),
 
 		{
+
 			prompt = "Select task to restart: ",
 			winopts = {
+
 				height = 0.4,
 				width = 0.5,
 				preview = { hidden = "hidden" },
@@ -74,6 +173,7 @@ vim.api.nvim_create_user_command("ZigStopLast", function()
 				preview = { hidden = "hidden" },
 			},
 			actions = {
+
 				["default"] = function(selected)
 					if #selected == 0 then
 						return
@@ -247,6 +347,7 @@ vim.api.nvim_create_user_command("ZigRun", function()
 	local file = vim.fn.expand("%:p")
 
 	fzf.fzf_exec({ "Run", "Run with args" }, {
+
 		prompt = "Run Options: ",
 		winopts = {
 			height = 0.4,
@@ -279,14 +380,16 @@ vim.api.nvim_create_user_command("ZigRun", function()
 		},
 	})
 end, {})
-vim.api.nvim_create_user_command("OverseerFzf", function()
+vim.api.nvim_create_user_command("OverseerToggleFzf", function()
 	local overseer = require("overseer")
 	local fzf = require("fzf-lua")
 
 	-- Get all tasks
+
 	local tasks = overseer.list_tasks({ recent_first = true })
 	if vim.tbl_isempty(tasks) then
 		vim.notify("No tasks found", vim.log.levels.WARN)
+
 		return
 	end
 
@@ -353,9 +456,11 @@ vim.api.nvim_create_user_command("OverseerFzf", function()
 							end,
 						},
 						dispose = {
+
 							name = "dispose",
 							desc = "Dispose the task",
 						},
+
 						edit = {
 							name = "edit",
 
@@ -408,3 +513,6 @@ vim.api.nvim_create_user_command("OverseerFzf", function()
 		}
 	)
 end, {})
+
+-- Optional: Add a keymap
+vim.keymap.set("n", "<leader>or", ":OverseerRunFzf<CR>", { silent = true, desc = "Overseer Run (FZF)" })

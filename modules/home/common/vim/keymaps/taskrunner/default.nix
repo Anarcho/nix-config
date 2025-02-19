@@ -29,9 +29,18 @@
   {
     mode = "n";
     key = "<leader>oo";
-    action = "<cmd>OverseerToggle<cr>";
+    action = "<cmd>OverseerToggleFzf<cr>";
     options = {
-      desc = "Toggle overseer tasks";
+      desc = "Overseer (FZF)";
+      silent = true;
+    };
+  }
+  {
+    mode = "n";
+    key = "<leader>or";
+    action = "<cmd>OverseerRunFzf<cr>";
+    options = {
+      desc = "Overseer run (FZF)";
       silent = true;
     };
   }

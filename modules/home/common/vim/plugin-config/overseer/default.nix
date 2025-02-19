@@ -3,7 +3,6 @@
     enable = true;
     settings = {
       strategy = "toggleterm";
-      template_dirs = ["overseer.template"];
       templates = [
         "builtin"
         "user.zig_test"
