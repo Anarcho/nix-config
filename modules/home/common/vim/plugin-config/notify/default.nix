@@ -3,7 +3,9 @@
     enable = true;
     settings = {
       timeout = 1000;
-      topDown = false;
+      topDown = true;
+      render = "compact";
+      stages = "slide";
     };
   };
 }

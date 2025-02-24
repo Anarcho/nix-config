@@ -115,7 +115,7 @@ in {
         // (import ./vim/plugin-config/alpha)
         // (import ./vim/plugin-config/oil)
         // (import ./vim/plugin-config/colorizer)
-        // (import ./vim/plugin-config/neotest)
+        #// (import ./vim/plugin-config/neotest)
         // (import ./vim/plugin-config/mini)
         // (import ./vim/plugin-config/notify)
         // (import ./vim/plugin-config/none-ls)
@@ -129,7 +129,7 @@ in {
         // (import ./vim/plugin-config/conform)
         // (import ./vim/plugin-config/autopairs)
         // (import ./vim/plugin-config/rest)
-        // (import ./vim/plugin-config/trouble)
+        #// (import ./vim/plugin-config/trouble)
         // (import ./vim/plugin-config/which-key);
     };
   };
