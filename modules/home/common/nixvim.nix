@@ -76,7 +76,7 @@ in {
       keymaps =
         []
         ++ import ./vim/keymaps/buffer
-        ++ import ./vim/keymaps/cmp
+        # ++ import ./vim/keymaps/cmp
         ++ import ./vim/keymaps/diagnostics
         ++ import ./vim/keymaps/directories
         ++ import ./vim/keymaps/lsp
@@ -90,7 +90,7 @@ in {
       plugins =
         {
           lspkind.enable = true;
-          lspsaga.enable = true;
+          lspsaga.enable = false;
           lualine.enable = true;
           web-devicons.enable = true;
           alpha.enable = true;
@@ -108,7 +108,7 @@ in {
           lazydev.enable = true;
         }
         // (import ./vim/plugin-config/lsp) {inherit pkgs;}
-        #// (import ./vim/plugin-config/blink-cmp)
+        // (import ./vim/plugin-config/blink-cmp) {inherit pkgs;}
         // (import ./vim/plugin-config/dadbod)
         // (import ./vim/plugin-config/luasnip)
         // (import ./vim/plugin-config/lualine)

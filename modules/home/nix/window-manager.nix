@@ -241,13 +241,14 @@ in {
               "workspaces, 1, 6, curve"
             ];
           };
-          exec-once = [
-            "${cfg.defaultTerminal}"
-          ];
         };
         extraConfig = ''
           # Monitor configuration
           monitor=,preferred,auto,1
+
+          # Execs
+          exec-once = hyprctl setcursor Bibatat-Modern-Ice 24
+
 
           # Set variables
           $terminal = ghostty
@@ -308,6 +309,11 @@ in {
 
           # Window rules
           windowrule = float, ^(pavucontrol)$
+          windowrulev2 = immediate, class:^(steam_app).*
+          windowrulev2 = immediate, class:^(Steam)$
+
+          env = WLR_DRM_NO_ATOMIC,1
+          env = XCURSOR_SIZE,24
         '';
       };
 
@@ -336,7 +342,6 @@ in {
 
       home.packages = with pkgs; [
         waybar
-        swaylock
         wl-clipboard
       ];
     })

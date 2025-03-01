@@ -2,6 +2,7 @@
   flake,
   lib,
   config,
+  pkgs,
   ...
 }:
 with lib; let
@@ -12,9 +13,18 @@ in {
     enable = mkEnableOption "Enable steam";
   };
   config = mkIf cfg.enable {
+    programs.gamescope.enable = true;
     programs.steam = {
       enable = true;
-      extest.enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+      ];
+      gamescopeSession = {
+        enable = true;
+      };
     };
   };
 }

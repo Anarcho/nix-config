@@ -38,7 +38,10 @@ in {
       };
     };
 
-    hardware.graphics.enable = true;
+    hardware.graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
 
     hardware.nvidia = {
       modesetting.enable = true;
@@ -55,6 +58,10 @@ in {
     environment.sessionVariables = {
       NIXOS_OZONE_WL = "1";
       WLR_NO_HARDWARE_CURSORS = "1";
+      GBM_BACKEND = "nvidia-drm";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      STEAM_FORCE_COMPOSITING_PIPELINE = "1";
+      LIBVA_DRIVER_NAME = "nvidia";
       XDG_SESSION_TYPE = "wayland";
       XDG_SESSION_DESKTOP = "Hyprland";
       XDG_CURRENT_DESKTOP = "Hyprland";
@@ -67,6 +74,8 @@ in {
       hyprland-qtutils
       hyprpaper
       sddm-astronaut
+      swaylock
+      libsForQt5.dolphin
     ];
   };
 }

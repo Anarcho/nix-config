@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   blink-cmp = {
     enable = true;
-
     settings = {
       appearance = {
         kind_icons = {

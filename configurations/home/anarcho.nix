@@ -30,6 +30,14 @@ in {
     colorScheme = "gruvbox-dark-medium";
   };
 
+  desktop.homemodules.themes = {
+    enable = true;
+    cursorTheme = "Bibata-Modern-Ice";
+    cursorPackage = pkgs.bibata-cursors;
+    gtkTheme = "adw-gtk3";
+    gtkPackage = pkgs.adw-gtk3;
+  };
+
   common.modules.editor.nixvim.enable = true;
   home.username = "anarcho";
   home.homeDirectory = "/home/anarcho";
@@ -61,6 +69,9 @@ in {
     };
   };
   home.persistence."/persist/home/anarcho" = {
+    directories = [
+      ".config/aseprite"
+    ];
     files = [
       ".config/tms/config.toml"
     ];

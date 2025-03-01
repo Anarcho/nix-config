@@ -189,6 +189,7 @@ in
           sort = true;
           show-icons = true;
           kb-cancel = "Escape,Super+space";
+          font = "JetBrains Mono Nerd Font Bold 14";
           lines = 5;
           drun-display-format = "{icon} {name}";
           disable-history = true;
