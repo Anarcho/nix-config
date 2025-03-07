@@ -19,7 +19,6 @@
           Interface = "󱡠";
           Keyword = "󰻾";
           Method = "󰊕";
-
           Module = "󰅩";
           Operator = "󰪚";
           Property = "󰖷";
@@ -27,7 +26,6 @@
           Snippet = "󱄽";
           Struct = "󱡠";
           Text = "󰉿";
-
           TypeParameter = "󰬛";
           Unit = "󰪚";
           Value = "󰦨";
@@ -111,6 +109,7 @@
       signature = {
         enabled = true;
       };
+      keymap.preset = "default";
     };
   };
 }

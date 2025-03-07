@@ -19,8 +19,6 @@
     just
     playerctl
 
-    aseprite
-
     xdg-utils
     tmux-sessionizer
   ];

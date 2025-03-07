@@ -49,6 +49,10 @@ in {
       PasswordAuthentication = false;
     };
   };
+  programs.nix-ld = {
+    enable = true;
+    package = pkgs.nix-ld-rs;
+  };
 
   # Enable home-manager for "anarcho" user
   home-manager.users."aaronk" = {
