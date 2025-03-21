@@ -38,7 +38,7 @@ in {
     gtkPackage = pkgs.adw-gtk3;
   };
 
-  common.modules.editor.nixvim.enable = true;
+  common.modules.editor.nixvim.enable = false;
   home.username = "anarcho";
   home.homeDirectory = "/home/anarcho";
   systemd.user.startServices = "sd-switch";
