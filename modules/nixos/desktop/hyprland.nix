@@ -44,6 +44,7 @@ in {
     };
 
     hardware.nvidia = {
+      open = true;
       modesetting.enable = true;
       nvidiaSettings = true;
     };
@@ -53,6 +54,9 @@ in {
       xdgOpenUsePortal = true;
       config.common.default = "*";
       config.hyprland.default = ["hyprland"];
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-gtk
+      ];
     };
 
     environment.sessionVariables = {

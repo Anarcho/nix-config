@@ -31,7 +31,6 @@
       ];
       files = [
         ".xinitrc"
-        ".Xresources"
         ".Xauthority"
         ".xsession"
         ".xsession-errors"
