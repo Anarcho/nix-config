@@ -19,7 +19,6 @@
 
         packages = with pkgs; [
           zig
-          zls
         ];
       };
 
