@@ -26,7 +26,7 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     # NVF
-    #nvf.url = "github:notashelf/nvf";
+    nvf.url = "github:notashelf/nvf";
     hyprland.url = "github:hyprwm/Hyprland";
 
     #Neovim

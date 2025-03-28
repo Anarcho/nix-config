@@ -1,4 +1,5 @@
 {
+  flake,
   pkgs,
   lib,
   config,
@@ -6,6 +7,9 @@
 }: let
   cfg = config.common.modules.editor.nvf;
 in {
+  imports = [
+    flake.inputs.nvf.homeManagerModules.default
+  ];
   options.common.modules.editor.nvf = {
     enable = lib.mkEnableOption "Enable NixVim configuration";
   };
@@ -14,6 +18,13 @@ in {
       enable = true;
       settings = {
         vim = {
+          useSystemClipboard = true;
+          options = {
+            autoindent = true;
+            smartindent = true;
+            shiftwidth = 2;
+            tabstop = 2;
+          };
           globals.mapleader = " ";
           globals.localmapleader = " ";
           theme = {
@@ -23,13 +34,15 @@ in {
           };
 
           luaConfigRC.basic = ''
-            vim.api.nvim_create_autocmd('TextYankPost', {
-                desc = 'Highlight when yanking (copying) text',
-                group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
-                callback = function()
-                    vim.highlight.on_yank()
-                end
-            })
+              vim.api.nvim_create_autocmd('TextYankPost', {
+                  desc = 'Highlight when yanking (copying) text',
+                  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
+                  callback = function()
+                      vim.highlight.on_yank()
+                  end
+              })
+
+            vim.api.nvim_create_autocmd("BufEnter", { command = [[set formatoptions-=cro]] })
           '';
 
           statusline.lualine.enable = true;
@@ -37,6 +50,13 @@ in {
 
           autocomplete.blink-cmp = {
             enable = true;
+            setupOpts = {
+              sources.default = [
+                "lsp"
+                "buffer"
+                "path"
+              ];
+            };
           };
 
           utility = {
@@ -110,6 +130,7 @@ in {
           languages = {
             enableLSP = true;
             enableTreesitter = true;
+            enableFormat = true;
             nix.enable = true;
             zig.enable = true;
           };
@@ -119,6 +140,9 @@ in {
             setupOpts = {
               zig = [
                 "zls"
+              ];
+              nix = [
+                "nils"
               ];
             };
           };
@@ -139,6 +163,25 @@ in {
             enable = true;
             setupOpts = {
               direction = "float";
+            };
+          };
+
+          extraPlugins = with pkgs.vimPlugins; {
+            oil = {
+              package = oil-nvim;
+              setup = ''
+                require("oil").setup{}
+              '';
+            };
+
+            overseer = {
+              package = overseer-nvim;
+              setup = ''
+                require("overseer").setup{
+                  strategy = "toggleterm",
+                  templates = { "builtin" },
+                }
+              '';
             };
           };
 
@@ -218,6 +261,27 @@ in {
               key = "<leader>dw";
               action = ":FzfLua diagnostic_workspace<CR>";
               desc = "Workspace diagnostic";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "-";
+              action = ":Oil<CR>";
+              desc = "Open oil";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>oo";
+              action = ":OverseerOpen[left]<CR>";
+              desc = "Overseer open";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>or";
+              action = ":OverseerRun<CR>";
+              desc = "Overseer run";
               silent = true;
             }
           ];

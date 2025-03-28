@@ -13,7 +13,8 @@ in {
     self.homeModules.home-only
   ];
 
-  common.modules.editor.nixvim.enable = true;
+  common.modules.editor.nvf.enable = true;
+  common.modules.editor.nixvim.enable = false;
 
   home.username = "aaronk";
   home.homeDirectory = "/home/aaronk";
