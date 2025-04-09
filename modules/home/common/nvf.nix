@@ -45,6 +45,18 @@ in {
             vim.api.nvim_create_autocmd("BufEnter", { command = [[set formatoptions-=cro]] })
           '';
 
+          luaConfigRC.diagnostic = ''
+            vim.diagnostic.config({
+              virtual_text = {
+                spacing = 2,
+              },
+              signs = true,
+              underline = true,
+              update_in_insert = false,
+              severity_sort = true,
+            })
+          '';
+
           statusline.lualine.enable = true;
           fzf-lua.enable = true;
 
@@ -56,6 +68,9 @@ in {
                 "buffer"
                 "path"
               ];
+              signature = {
+                enabled = true;
+              };
             };
           };
 
@@ -282,6 +297,55 @@ in {
               key = "<leader>or";
               action = ":OverseerRun<CR>";
               desc = "Overseer run";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>wv";
+              action = ":vsplit<CR>";
+              desc = "Split Vertical";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>wh";
+              action = ":split<CR>";
+              desc = "Split Horizontal";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>wq";
+              action = ":q<CR>";
+              desc = "Close Window";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<C-h>";
+              action = "<C-w>h";
+              desc = "Move Left";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<C-j>";
+              action = "<C-w>j";
+              desc = "Move Down";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<C-k>";
+              action = "<C-w>k";
+              desc = "Move Up";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<C-l>";
+              action = "<C-w>l";
+              desc = "Move Right";
               silent = true;
             }
           ];
