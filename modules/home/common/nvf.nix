@@ -5,6 +5,10 @@
   config,
   ...
 }: let
+  nix2Lua = flake.inputs.nvf.lib.nvim.lua.toLuaObject;
+  inherit (flake.inputs.nvf.lib.nvim.dag) entryBetween entryAfter;
+  inherit (lib.generators) mkLuaInline;
+  setup = module: table: "require('${module}').setup(${nix2Lua table})";
   cfg = config.common.modules.editor.nvf;
 in {
   imports = [
@@ -25,6 +29,7 @@ in {
             shiftwidth = 2;
             tabstop = 2;
           };
+
           globals.mapleader = " ";
           globals.localmapleader = " ";
           theme = {
@@ -74,6 +79,11 @@ in {
             };
           };
 
+          treesitter = {
+            enable = true;
+            addDefaultGrammars = true;
+          };
+
           utility = {
             snacks-nvim = {
               enable = true;
@@ -114,7 +124,6 @@ in {
                     }
                   ];
                 };
-                picker.enabled = true;
                 notifier.enabled = true;
                 input.enabled = true;
               };
@@ -153,19 +162,37 @@ in {
           formatter.conform-nvim = {
             enable = true;
             setupOpts = {
-              zig = [
-                "zls"
-              ];
-              nix = [
-                "nils"
-              ];
+              formatters_by_ft = {
+                zig = [
+                  "zls"
+                ];
+                nix = [
+                  "nils"
+                ];
+                json = [
+                  "jq"
+                ];
+              };
             };
           };
+
+          comments.comment-nvim.enable = true;
+
           binds = {
             whichKey = {
               enable = true;
               setupOpts = {
                 preset = "helix";
+              };
+              register = {
+                "<leader>z" = "⚡ [Z]ig";
+                "<leader>b" = "📑 [B]uffers";
+                "<leader>f" = "🔍 [F]ind";
+                "<leader>d" = "🚨 [D]iagnostics";
+                "<leader>w" = "🪟 [W]indow";
+                "<leader>o" = "🚀 [O]verseer";
+                "<leader>l" = "💡 [L]SP";
+                "<leader>g" = "🗯 [C]omment";
               };
             };
             cheatsheet.enable = true;
@@ -189,13 +216,114 @@ in {
               '';
             };
 
+            nvim-treesitter-textsubjects = {
+              package = nvim-treesitter-textsubjects;
+              setup = setup "nvim-treesitter.configs" {
+                textsubjects = {
+                  enable = true;
+                  keymaps = {
+                    "<cr>" = "textsubjects-smart";
+                    ";" = "textsubjects-container-outer";
+                    "i;" = "textsubjects-container-inner";
+                  };
+                };
+              };
+            };
+
+            nvim-treesitter-textobjects = {
+              package = nvim-treesitter-textobjects;
+              setup = setup "nvim-treesitter.configs" {
+                textobjects = {
+                  select = {
+                    enable = true;
+                    lookahed = true;
+                    keymaps = {
+                      "af" = "@function.outer";
+                      "if" = "@function.inner";
+                      "ac" = "@class.outer";
+                      "ic" = "@class.inner";
+                    };
+                    selection_modes = {
+                      "@parameter.outer" = "v";
+                      "@function.outer" = "V";
+                      "@class.outer" = "V";
+                    };
+                  };
+                  swap = {
+                    enable = true;
+                    swap_next = {
+                      "cx;" = "@parameter.inner";
+                    };
+                    swap_previous = {
+                      "cx," = "@parameter.inner";
+                    };
+                  };
+                  move = {
+                    enable = true;
+                    set_jumps = true;
+                    goto_next_start = {
+                      "]f" = "@function.outer";
+                      "]c" = "@class.outer";
+                      "]s" = "@scope";
+                    };
+                    goto_previous_start = {
+                      "[f" = "@function.outer";
+                      "[c" = "@class.outer";
+                      "[s" = "@scope";
+                    };
+                    goto_next_end = {
+                      "]F" = "@function.outer";
+                      "]C" = "@class.outer";
+                    };
+                    goto_previous_end = {
+                      "[F" = "@function.outer";
+                      "[C" = "@class.outer";
+                    };
+                  };
+                };
+              };
+            };
+
             overseer = {
               package = overseer-nvim;
               setup = ''
-                require("overseer").setup{
-                  strategy = "toggleterm",
+                local overseer = require("overseer")
+                overseer.setup({
+
+                  strategy = {
+                    "toggleterm",
+                    direction = "float",
+                  },
                   templates = { "builtin" },
-                }
+                })
+
+                -- Register user tasks
+
+                overseer.register_template({
+                  name = "Zig: build run",
+                  builder = function()
+                    return {
+                      cmd = { "zig" },
+                      args = { "build", "run" },
+                      name = "zig build run",
+                      cwd = vim.fn.getcwd(),
+                      components = { "default" },
+                    }
+                  end,
+                })
+
+                overseer.register_template({
+                  name = "Zig: build",
+                  builder = function()
+                    return {
+                      cmd = { "zig" },
+                      args = { "build" },
+                      name = "zig build",
+                      cwd = vim.fn.getcwd(),
+                      components = { "default" },
+                    }
+                  end,
+                })
               '';
             };
           };
@@ -227,6 +355,20 @@ in {
               key = "<s-h>";
               action = "<cmd>BufferLineCyclePrev<CR>";
               desc = "Previous tab";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>bo";
+              action = "<cmd>BufferLineCloseOthers<CR>";
+              desc = "Close other buffers";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>bp";
+              action = "<cmd>BufferLinePick<CR>";
+              desc = "Pick buffer";
               silent = true;
             }
             {
@@ -301,6 +443,23 @@ in {
             }
             {
               mode = "n";
+
+              key = "<leader>zr";
+              action = ":OverseerRunCmd zig build run<CR>";
+
+              desc = "Run zig build run";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>zb";
+              action = ":OverseerRunCmd zig build<CR>";
+              desc = "Run zig build";
+              silent = true;
+            }
+
+            {
+              mode = "n";
               key = "<leader>wv";
               action = ":vsplit<CR>";
               desc = "Split Vertical";
@@ -346,6 +505,55 @@ in {
               key = "<C-l>";
               action = "<C-w>l";
               desc = "Move Right";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "gd";
+              action = "<cmd>lua vim.lsp.buf.definition()<CR>";
+              desc = "Go to definition";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "gr";
+              action = "<cmd>lua vim.lsp.buf.references()<CR>";
+              desc = "References";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "gi";
+              action = "<cmd>lua vim.lsp.buf.implementation()<CR>";
+              desc = "Implementation";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "K";
+              action = "<cmd>lua vim.lsp.buf.hover()<CR>";
+              desc = "Hover";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<C-k>";
+              action = "<cmd>lua vim.lsp.buf.signature_help()<CR>";
+              desc = "Signature Help";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>rn";
+              action = "<cmd>lua vim.lsp.buf.rename()<CR>";
+              desc = "Rename symbol";
+              silent = true;
+            }
+            {
+              mode = "n";
+              key = "<leader>ca";
+              action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
+              desc = "Code Action";
               silent = true;
             }
           ];

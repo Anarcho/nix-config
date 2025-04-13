@@ -42,6 +42,11 @@ in {
       options = "--delete-older-than 7d";
     };
   };
+
+  virtualisation.docker.enable = true;
+
+  users.users.aaronk.extraGroups = ["docker"];
+
   services.openssh = {
     enable = true;
     settings = {

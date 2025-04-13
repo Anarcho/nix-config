@@ -14,8 +14,10 @@
     nil # Nix language server
     nix-info
     nixpkgs-fmt
+    jsonfmt
     alejandra
     yamlfmt
+    jq
     just
     playerctl
 
