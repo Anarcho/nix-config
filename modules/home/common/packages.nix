@@ -16,6 +16,8 @@
     nixpkgs-fmt
     jsonfmt
     alejandra
+    sqlfluff
+    python313Packages.sqlfmt
     yamlfmt
     jq
     just
